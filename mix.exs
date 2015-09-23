@@ -18,7 +18,7 @@ defmodule Txportal.Mixfile do
   def application do
     [mod: {Txportal, []},
      applications: [:phoenix, :phoenix_html, :cowboy, :logger,
-                    :phoenix_ecto, :postgrex]]
+                    :phoenix_ecto, :postgrex, :hackney, :couchbeam]]
   end
 
   # Specifies which paths to compile per environment
@@ -34,6 +34,8 @@ defmodule Txportal.Mixfile do
      {:postgrex, ">= 0.0.0"},
      {:phoenix_html, "~> 2.1"},
      {:phoenix_live_reload, "~> 1.0", only: :dev},
-     {:cowboy, "~> 1.0"}]
+     {:cowboy, "~> 1.0"},
+     {:couchbeam, "1.0.6", [github: "benoitc/couchbeam", tag: "1.0.6"]}
+    ]
   end
 end
