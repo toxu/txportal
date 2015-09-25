@@ -1,5 +1,8 @@
-var ListGroup = ReactBootstrap.ListGroup;
-var ListGroupItem = ReactBootstrap.ListGroupItem;
+import React from 'react';
+import ListGroup from 'react-bootstrap/lib/ListGroup';
+import ListGroupItem from 'react-bootstrap/lib/ListGroupItem';
+
+var $ = require("jquery")
 
 class TxtResultList extends React.Component{
 	constructor(props) {

@@ -21,12 +21,7 @@
 // import socket from "./socket"
 
 // import TestClass from "./TestClass"
-import MainForm from "./mainform"
-
-export var App = {
-	// Main entry point
-	main: function() {
-		React.render(<MainForm/>, document.getElementById("mydiv"))
-	}
-}
+import React from 'react';
+import MainForm from "./mainform";
+React.render(<MainForm/>, document.getElementById("mydiv"));
 

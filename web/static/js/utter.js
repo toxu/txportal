@@ -1,5 +1,8 @@
-var Tabs = ReactBootstrap.Tabs;
-var Tab = ReactBootstrap.Tab;
+import React from 'react'
+import Tabs from 'react-bootstrap/lib/Tabs';
+import Tab from 'react-bootstrap/lib/Tab';
+
+var $ = require("jquery")
 
 class Utter extends React.Component{
 	constructor(props) {
