@@ -23,5 +23,8 @@
 // import TestClass from "./TestClass"
 import React from 'react';
 import MainForm from "./mainform";
+import 'bootstrap/dist/css/bootstrap.css';
+import '../css/mainform.css';
+
 React.render(<MainForm/>, document.getElementById("mydiv"));
 
