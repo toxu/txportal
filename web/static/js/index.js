@@ -22,7 +22,7 @@
 
 // import TestClass from "./TestClass"
 import React from 'react';
-import MainForm from "./mainform";
+import MainForm from "./components/mainform";
 import 'bootstrap/dist/css/bootstrap.css';
 import '../css/mainform.css';
 
