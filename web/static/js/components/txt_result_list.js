@@ -39,5 +39,5 @@ class TxtResultList extends React.Component{
 	}
 }
 
-TxtResultList.defaultProps = {action: 'Loading...', source: 'http://localhost:4000/api/txt/results'};
+TxtResultList.defaultProps = {action: 'Loading...', source: '/api/txt/results'};
 export default TxtResultList;

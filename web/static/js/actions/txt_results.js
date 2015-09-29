@@ -38,7 +38,7 @@ export function txtRvRecv(branch, json) {
 export function fetchTxtRv(branch) {
 	return dispatch => {
 		dispatch(txtRvReq(branch));
-		return fetch('http://localhost:4000/api/txtRv')
+		return fetch('/api/txt/results')
 		.then(req => req.json())
 		.then(json => dispatch(txtRvRecv(branch, json)));
 	}

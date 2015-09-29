@@ -23,7 +23,7 @@ class Utter extends React.Component{
 
     render() {
         console.log("Rendering utter");
-        const { dispatch, projects, activeProjectId } = this.props;
+        const { projects, activeProjectId } = this.props;
 
         var ek = 0;
         var tabs = projects.map(

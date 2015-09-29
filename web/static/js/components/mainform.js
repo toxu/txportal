@@ -1,10 +1,3 @@
-//var Navbar = ReactBootstrap.Navbar;
-//var NavItem = ReactBootstrap.NavItem;
-//var NavDropdown = ReactBootstrap.NavDropdown;
-//var Nav = ReactBootstrap.Nav;
-//var MenuItem = ReactBootstrap.MenuItem;
-
-//import React from 'react'
 import Navbar from 'react-bootstrap/lib/Navbar';
 import NavItem from 'react-bootstrap/lib/NavItem';
 import NavDropdown from 'react-bootstrap/lib/NavDropdown';
