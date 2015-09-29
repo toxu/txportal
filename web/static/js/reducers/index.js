@@ -1,14 +1,16 @@
 import { combineReducers } from 'redux';
 import {
-	TXT_RV_REQ,
-	TXT_RV_RECV,
-	TXT_RV_SELECT_ONE,
-	TXT_RV_INVALIDATE,
+    TXT_RV_REQ,
+    TXT_RV_RECV,
+    TXT_RV_SELECT_ONE,
+    TXT_RV_INVALIDATE,
 } from '../actions/txt_results';
 
 import {
-	UTTER_GET_PROJECTS_START,
-	UTTER_PROJECTS_RECV
+    UTTER_TAB_SELECT,
+    UTTER_GET_PROJECTS_START,
+    UTTER_PROJECTS_RECV,
+    UTTER_RESULTS_RECV,
 } from '../actions/utter';
 
 function selectTxtRv(state = '', action) {
@@ -21,9 +23,9 @@ function selectTxtRv(state = '', action) {
 }
 
 function loadTxtRv(state = {
-	isFetching: false,
-	didInvalidate: false,
-	items: []
+    isFetching: false,
+    didInvalidate: false,
+    items: []
 }, action) {
 	switch(action.type) {
 	case TXT_RV_INVALIDATE:
@@ -33,11 +35,11 @@ function loadTxtRv(state = {
 	case TXT_RV_REQ:
 		return Object.assign({}, state, {
 			isFetching: true,
-			didInvalidate: false 
+			didInvalidate: false
 		});
 	case TXT_RV_RECV:
 		return Object.assign({}, state, {
-			isFetching: false, 
+			isFetching: false,
 			didInvalidate: false,
 			items: action.txtRv,
 			lastUpdated: action.receivedAt
@@ -48,16 +50,29 @@ function loadTxtRv(state = {
 }
 
 function utter(state = {
-	projects: [],
-	projsource: 'http://localhost:4000/api/utter/projects',
+    projects: [],
+    results: [],
+    activeProjectId: 1,
+    projsource: 'http://localhost:4000/api/utter/projects'
 }, action) {
 	switch(action.type) {
+	case UTTER_TAB_SELECT:
+		  return Object.assign({}, state, {
+			    activeProjectId: action.activeProjectId
+		  });
 	case UTTER_GET_PROJECTS_START:
 		return state; // now we dont do any fetching indication, just by-pass the get action
 	case UTTER_PROJECTS_RECV:
 		return Object.assign({}, state, {
 			projects: action.rv
 		});
+	case UTTER_RESULTS_RECV:
+		  return Object.assign({}, state, {
+			    results: [...(state.results).slice(0, action.index),
+                    Object.assign({}, state.results[action.index], json),
+                    ...(state.results).slice(action.index + 1)
+                    ]
+		  });
 	default:
 		return state;
 	}

@@ -1,41 +1,43 @@
 import React from 'react';
 import {connect} from 'react-redux';
-import { fetchUtterProjects } from '../actions/utter';
+import { fetchUtterProjects, utterTabSelected } from '../actions/utter';
 
 // UI
 import Tabs from 'react-bootstrap/lib/Tabs';
 import Tab from 'react-bootstrap/lib/Tab';
 
 class Utter extends React.Component{
-	constructor(props) {
-		super(props);
-	}
+    constructor(props) {
+        super(props);
+    }
 
-	componentDidMount() {
-		console.log("Utter mounting...");
-		const { dispatch, projsource } = this.props;
-		console.log(this.props);
+    componentDidMount() {
+        console.log("Utter mounting...");
+        const { dispatch, projsource } = this.props;
+        dispatch(fetchUtterProjects(projsource));
+    }
 
-		dispatch(fetchUtterProjects());
-	}
+    handleSelect(key) {
+        this.props.dispatch(utterTabSelected(key));
+    }
 
-	render() {
-		console.log("Rendering utter");
-		const { dispatch, projects, projsource } = this.props;
+    render() {
+        console.log("Rendering utter");
+        const { dispatch, projects, activeProjectId } = this.props;
 
-		var ek = 0;
-		var tabs = projects.map(
-				(proj) => {
-					ek++;
-					return <Tab eventKey={ek} title={proj}>{proj} unit test result content</Tab>
-				}
-				)
-		return (
-				<Tabs defaultActiveKey={1}>
-				{tabs}
-				</Tabs>
-		       )
-	}
+        var ek = 0;
+        var tabs = projects.map(
+            (proj) => {
+                ek++;
+                return <Tab eventKey={ek} title={proj}> {proj} unit test result content </Tab>
+            }
+        )
+        return (
+            <Tabs activeKey={activeProjectId} onSelect={this.handleSelect.bind(this)}>
+                {tabs}
+            </Tabs>
+        )
+    }
 }
 
 function select(state) {
