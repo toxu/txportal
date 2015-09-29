@@ -16,9 +16,9 @@ function selectTxtRv(state = '', action) {
 }
 
 function reqTxtRv(state = {
-	isFetching = false,
-	didInvalidate: false,
-	items: []
+	  isFetching: false,
+    didInvalidate: false,
+    items: []
 }, action) {
 	switch(action.type) {
 	case TXT_RV_INVALIDATE:

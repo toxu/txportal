@@ -22,9 +22,22 @@
 
 // import TestClass from "./TestClass"
 import React from 'react';
+import {Provider} from 'react-redux';
+import portalStore from "./store/portal_store";
 import MainForm from "./components/mainform";
 import 'bootstrap/dist/css/bootstrap.css';
-import '../css/mainform.css';
 
-React.render(<MainForm/>, document.getElementById("mydiv"));
+const store = portalStore();
+
+export default class Root extends React.Component {
+    render() {
+        return (
+            <Provider store={store}>
+                {() => <MainForm />}
+            </Provider>
+        );
+    }
+}
+
+React.render(<Root/>, document.getElementById("mydiv"));
 

@@ -10,8 +10,9 @@ import NavItem from 'react-bootstrap/lib/NavItem';
 import NavDropdown from 'react-bootstrap/lib/NavDropdown';
 import Nav from 'react-bootstrap/lib/Nav';
 import MenuItem from 'react-bootstrap/lib/MenuItem';
-import TxtResultList from "./txt_result_list"
-import Utter from "./utter"
+import TxtResultList from "./txt_result_list";
+import Utter from "./utter";
+import '../../css/mainform.css';
 
 class MainForm extends React.Component{
 	constructor(props) {
@@ -20,7 +21,7 @@ class MainForm extends React.Component{
 			page: "Empty"
 		};
 	}
-	
+
 	componentDidMount() {
 	}
 
@@ -67,4 +68,4 @@ class MainForm extends React.Component{
 	}
 }
 
-export default MainForm
+export default MainForm;

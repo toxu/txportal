@@ -2,7 +2,7 @@ import React from 'react';
 import ListGroup from 'react-bootstrap/lib/ListGroup';
 import ListGroupItem from 'react-bootstrap/lib/ListGroupItem';
 
-var $ = require("jquery")
+var $ = require("jquery");
 
 class TxtResultList extends React.Component{
 	constructor(props) {
@@ -12,7 +12,7 @@ class TxtResultList extends React.Component{
 			results: []
 		};
 	}
-	
+
 	componentDidMount() {
 		$.get(this.props.source, function(result) {
 			this.setState({
@@ -25,7 +25,7 @@ class TxtResultList extends React.Component{
 	render() {
 		var result_items = this.state.results.map(
 				(result) => {
-					return <ListGroupItem>{result.id} ==> {result.rv}</ListGroupItem>
+					  return <ListGroupItem>{result.id} ==> {result.rv}</ListGroupItem>;
 				}
 				)
 		return (
@@ -40,4 +40,4 @@ class TxtResultList extends React.Component{
 }
 
 TxtResultList.defaultProps = {action: 'Loading...', source: 'http://localhost:4000/api/txt/results'};
-export default TxtResultList
+export default TxtResultList;
