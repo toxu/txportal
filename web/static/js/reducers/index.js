@@ -1,5 +1,7 @@
 import { combineReducers } from 'redux';
 import {
+    MF_PAGE_SELECT,
+
     UTTER_TAB_SELECT,
     UTTER_GET_PROJECTS_START,
     UTTER_PROJECTS_RECV,
@@ -76,10 +78,24 @@ function utter(state = {
 	}
 }
 
+function mainform(state = {
+    activePageId: 1
+}, action) {
+    switch (action.type) {
+    case MF_PAGE_SELECT:
+		    return Object.assign({}, state, {
+			      activePageId: action.activePageId
+		    });
+    default:
+        return state;
+    }
+}
+
 const rootReducer = combineReducers({
-	loadTxtRv,
-	selectTxtRv,
-	utter
+    mainform,
+    loadTxtRv,
+    selectTxtRv,
+    utter,
 });
 
 export default rootReducer;
