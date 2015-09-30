@@ -9,10 +9,7 @@ defmodule Txportal.UtterController do
     svr = :couchbeam.server_connection(@db_url, [])
     {:ok, db} = :couchbeam.open_db(svr, "utter-projects", [])
     {:ok, rv} = :couchbeam_view.all(db, [])
-    jrv = rv |> Enum.map(
-      fn x ->
-        getkey x
-      end)
+    jrv = rv |> Enum.map(&(getkey(&1)))
     json conn, jrv
   end
 
@@ -20,21 +17,16 @@ defmodule Txportal.UtterController do
     svr = :couchbeam.server_connection(@db_url, [])
     {:ok, db} = :couchbeam.open_db(svr, "utter-#{pname}", [])
     {:ok, rv} = :couchbeam_view.fetch(db, {"utter", "target_commits"}, [{:limit, 20}, :descending])
-    jrv = rv |> Enum.map(
-      fn x ->
-        convToMap x
-      end)
+    jrv = rv |> Enum.map(&(convToMap(&1)))
     json conn, jrv
   end
 
   defp getkey({items}) do
     rv = items
     |> Enum.find(
-      fn tpl ->
-        case tpl do
-          {"key", _k} -> true
-          _ -> false
-        end
+      fn
+         ({"key", _k}) -> true
+         (_) -> false
       end)
     |> elem 1
   end
@@ -49,11 +41,7 @@ defmodule Txportal.UtterController do
   end
 
   defp convToMap(list) when is_list(list) do
-    list |> Enum.map(
-      fn x ->
-        convToMap x
-      end
-    )
+    list |> Enum.map(&(convToMap(&1)))
   end
 
   defp convToMap(other_types) do
