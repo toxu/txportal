@@ -22,8 +22,7 @@ defmodule Txportal.UtterController do
   end
 
   defp getkey({items}) do
-    rv = items
-    |> Enum.find(
+    items |> Enum.find(
       fn
          ({"key", _k}) -> true
          (_) -> false
@@ -32,8 +31,7 @@ defmodule Txportal.UtterController do
   end
 
   defp convToMap({items}) do
-    rv = items
-    |> Enum.reduce(%{},
+    items |> Enum.reduce(%{},
       fn {k, v}, acc ->
         Dict.put(acc, k, convToMap(v))
       end
