@@ -17,8 +17,8 @@ defmodule Txportal.Router do
     pipe_through :api
 
     get "/txt/results", TxtController, :results
-    get "/utter/results", UtterController, :results
     get "/utter/projects", UtterController, :projects
+    get "/utter/projects/:pname", UtterController, :project_results
   end
 
   scope "/", Txportal do
@@ -27,8 +27,4 @@ defmodule Txportal.Router do
     get "/", PageController, :index
   end
 
-  # Other scopes may use custom stacks.
-  # scope "/api", Txportal do
-  #   pipe_through :api
-  # end
 end

@@ -1,10 +1,11 @@
 import React from 'react';
 import {connect} from 'react-redux';
-import { fetchUtterProjects, utterTabSelected } from '../actions/utter';
+import { fetchUtterResults, fetchUtterProjects, utterTabSelected } from '../actions/utter';
 
 // UI
 import Tabs from 'react-bootstrap/lib/Tabs';
 import Tab from 'react-bootstrap/lib/Tab';
+import UtterResultList from './utter_result_list';
 
 class Utter extends React.Component{
     constructor(props) {
@@ -12,7 +13,6 @@ class Utter extends React.Component{
     }
 
     componentDidMount() {
-        console.log("Utter mounting...");
         const { dispatch, projsource } = this.props;
         dispatch(fetchUtterProjects(projsource));
     }
@@ -22,21 +22,32 @@ class Utter extends React.Component{
     }
 
     render() {
-        console.log("Rendering utter");
-        const { projects, activeProjectId } = this.props;
+        const { dispatch, projects, results, activeProjectId } = this.props;
 
-        var ek = 0;
+        var key = 0;
         var tabs = projects.map(
             (proj) => {
-                ek++;
-                return <Tab eventKey={ek} title={proj}> {proj} unit test result content </Tab>
+                key++;
+                if (results[key-1] == undefined) {
+                    return <Tab eventKey={key} title={proj}> Loading results for {proj}... </Tab>
+                }
+                else {
+                    return <Tab eventKey={key} title={proj}> <UtterResultList rvlist={results[key-1]}/> </Tab>
+                }
             }
-        )
+        );
+
+        key = activeProjectId-1;
+        if (projects[key] != undefined
+            && (results[key] == undefined || results[key].length == 0)) {
+            dispatch(fetchUtterResults(key, projects[key]));
+        }
+
         return (
             <Tabs activeKey={activeProjectId} onSelect={this.handleSelect.bind(this)}>
                 {tabs}
             </Tabs>
-        )
+        );
     }
 }
 

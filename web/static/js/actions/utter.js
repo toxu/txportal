@@ -49,7 +49,7 @@ export function utterResultsRecv(index, json) {
 }
 export function fetchUtterResults(index, project) {
 	  return dispatch => {
-		    return fetch('/api/utter/projects/{project}')
+		    return fetch('/api/utter/projects/' + project)
 		        .then(req => req.json())
 		        .then(json => dispatch(utterResultsRecv(index, json)));
 	  };

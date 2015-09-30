@@ -53,7 +53,7 @@ function utter(state = {
     projects: [],
     results: [],
     activeProjectId: 1,
-    projsource: 'http://localhost:4000/api/utter/projects'
+    projsource: '/api/utter/projects'
 }, action) {
 	switch(action.type) {
 	case UTTER_TAB_SELECT:
@@ -64,12 +64,13 @@ function utter(state = {
 		return state; // now we dont do any fetching indication, just by-pass the get action
 	case UTTER_PROJECTS_RECV:
 		return Object.assign({}, state, {
-			projects: action.rv
+			  projects: action.rv,
+        results: []
 		});
 	case UTTER_RESULTS_RECV:
 		  return Object.assign({}, state, {
 			    results: [...(state.results).slice(0, action.index),
-                    Object.assign({}, state.results[action.index], json),
+                    Object.assign([], state.results[action.index], action.rv),
                     ...(state.results).slice(action.index + 1)
                     ]
 		  });
@@ -95,7 +96,7 @@ const rootReducer = combineReducers({
     mainform,
     loadTxtRv,
     selectTxtRv,
-    utter,
+    utter
 });
 
 export default rootReducer;
