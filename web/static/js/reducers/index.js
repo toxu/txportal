@@ -1,17 +1,15 @@
 import { combineReducers } from 'redux';
 import {
-    TXT_RV_REQ,
-    TXT_RV_RECV,
-    TXT_RV_SELECT_ONE,
-    TXT_RV_INVALIDATE,
-} from '../actions/txt_results';
-
-import {
     UTTER_TAB_SELECT,
     UTTER_GET_PROJECTS_START,
     UTTER_PROJECTS_RECV,
     UTTER_RESULTS_RECV,
-} from '../actions/utter';
+
+    TXT_RV_REQ,
+    TXT_RV_RECV,
+    TXT_RV_SELECT_ONE,
+    TXT_RV_INVALIDATE,
+} from '../constants/action_types';
 
 function selectTxtRv(state = '', action) {
 	switch(action.type) {

@@ -1,9 +1,10 @@
 import fetch from 'isomorphic-fetch';
-
-export const TXT_RV_REQ = 'TXT_RV_REQ';
-export const TXT_RV_RECV = 'TXT_RV_RECV';
-export const TXT_RV_SELECT_ONE = 'TXT_RV_SELECT_ONE';
-export const TXT_RV_INVALIDATE = 'TXT_RV_INVALIDATE';
+import {
+    TXT_RV_REQ,
+    TXT_RV_RECV,
+    TXT_RV_SELECT_ONE,
+    TXT_RV_INVALIDATE
+} from '../constants/action_types';
 
 export function txtRvSelectOne(txtRv) {
 	return {
