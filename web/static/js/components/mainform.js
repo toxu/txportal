@@ -41,7 +41,7 @@ class MainForm extends React.Component{
         }
         return (
                 <div>
-                <Navbar brand="Tx Portal" activeKey={this.props.activePageId} >
+                <Navbar brand="Tx Portal" activeKey={this.props.activePageId} fixedTop={true} fluid={true}>
                 <Nav>
                 <NavItem eventKey={1} href="javascript:void(0);" onClick={this.handleSelect.bind(this, 1)}>Test Results</NavItem>
                 <NavItem eventKey={2} href="javascript:void(0);" onClick={this.handleSelect.bind(this, 2)}>Utter Results</NavItem>
