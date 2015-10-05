@@ -1,6 +1,6 @@
 import React from 'react';
 import {connect} from 'react-redux';
-import {utterTabSelected} from '../actions/mainform';
+import {mainformTabSelected} from '../actions/mainform';
 
 // UI
 import Navbar from 'react-bootstrap/lib/Navbar';
@@ -10,6 +10,7 @@ import Nav from 'react-bootstrap/lib/Nav';
 import MenuItem from 'react-bootstrap/lib/MenuItem';
 import TxtResultList from "./txt_result_list";
 import Utter from "./utter";
+import Worker from './worker'
 
 // CSS
 import '../../css/mainform.css';
@@ -23,7 +24,7 @@ class MainForm extends React.Component{
     }
 
     handleSelect(key) {
-        this.props.dispatch(utterTabSelected(key));
+        this.props.dispatch(mainformTabSelected(key));
     }
 
     render() {
@@ -35,6 +36,9 @@ class MainForm extends React.Component{
         case 2:
             content = <Utter/>;
             break;
+        case 3:
+            content = <Worker/>;
+            break;
         default:
             content = <div/>;
             break;
@@ -45,6 +49,7 @@ class MainForm extends React.Component{
                 <Nav>
                 <NavItem eventKey={1} href="javascript:void(0);" onClick={this.handleSelect.bind(this, 1)}>Test Results</NavItem>
                 <NavItem eventKey={2} href="javascript:void(0);" onClick={this.handleSelect.bind(this, 2)}>Utter Results</NavItem>
+                <NavItem eventKey={3} href="javascript:void(0);" onClick={this.handleSelect.bind(this, 3)}>TXT Workers</NavItem>
                 </Nav>
                 </Navbar>
                 <div className='portal-content'> {content} </div>
