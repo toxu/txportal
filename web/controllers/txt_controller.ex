@@ -9,8 +9,16 @@ defmodule Txportal.TxtController do
     %{"id" => "test4", "rv" =>"success"},
   ]
 
+  @txt_results_url "http://10.50.100.213:5984/txt_results/_design/txtbrowser/_view/txtbrowser"
+
   def results(conn, _) do
-    json conn, @result
+    HTTPoison.start
+    rv = HTTPoison.get @txt_results_url
+    rv_json = case rv do
+             {:ok, resp} -> resp.body
+             _ -> %{"Error" => "Failed to connect to database"}
+           end
+    text conn, rv_json
   end
 
 end

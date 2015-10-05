@@ -27,20 +27,18 @@ export function txtRvReq(branch) {
 	};
 }
 
-export function txtRvRecv(branch, json) {
+export function txtRvRecv(json) {
 	return {
-		type: TXT_RV_REQ,
-		branch,
+		type: TXT_RV_RECV,
 		txtRv: json,
 		receivedAt: Date.now()
 	};
 }
 
-export function fetchTxtRv(branch) {
+export function fetchTxtRv() {
 	return dispatch => {
-		dispatch(txtRvReq(branch));
 		return fetch('/api/txt/results')
 		.then(req => req.json())
-		.then(json => dispatch(txtRvRecv(branch, json)));
+		.then(json => dispatch(txtRvRecv(json)));
 	}
 }

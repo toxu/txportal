@@ -29,7 +29,7 @@ class Utter extends React.Component{
             (proj) => {
                 key++;
                 if (results[key-1] == undefined) {
-                    return <Tab eventKey={key} title={proj}> Loading results for {proj}... </Tab>
+                    return <Tab eventKey={key} title={proj}></Tab>
                 }
                 else {
                     return <Tab eventKey={key} title={proj}> <UtterResultList rvlist={results[key-1]}/> </Tab>

@@ -18,7 +18,7 @@ defmodule Txportal.Mixfile do
   def application do
     [mod: {Txportal, []},
      applications: [:phoenix, :phoenix_html, :cowboy, :logger,
-                    :phoenix_ecto, :postgrex, :hackney, :couchbeam]]
+                    :phoenix_ecto, :postgrex, :hackney, :couchbeam, :httpoison]]
   end
 
   # Specifies which paths to compile per environment
@@ -29,13 +29,16 @@ defmodule Txportal.Mixfile do
   #
   # Type `mix help deps` for examples and options
   defp deps do
-    [{:phoenix, "~> 1.0.2"},
+    [
+      {:hackney, "~> 1.3.1", [optional: false, hex: :hackney, override: true]}, 
+     {:phoenix, "~> 1.0.2"},
      {:phoenix_ecto, "~> 1.1"},
      {:postgrex, ">= 0.0.0"},
      {:phoenix_html, "~> 2.1"},
      {:phoenix_live_reload, "~> 1.0", only: :dev},
      {:cowboy, "~> 1.0"},
-     {:couchbeam, "1.0.6", [github: "benoitc/couchbeam", tag: "1.0.6"]}
+     {:httpoison, "~> 0.7.2"},
+     {:couchbeam, "1.1.8", [github: "benoitc/couchbeam", tag: "1.1.8"]}
     ]
   end
 end
