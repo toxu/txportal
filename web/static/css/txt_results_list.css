@@ -1,0 +1,7 @@
+.react-bs-table > .table > thead > tr > th > .th-inner > input{
+  width:100%;
+}
+
+.react-bs-container{
+    min-width: 1500px;
+}

@@ -1,8 +1,12 @@
 import React from 'react';
 import {connect} from 'react-redux';
 import {fetchTxtRv} from '../actions/txt_results'
+
 import {BootstrapTable, TableHeaderColumn} from 'react-bootstrap-table';
+
+// CSS
 import 'react-bootstrap-table/css/react-bootstrap-table.css'
+import '../../css/txt_results_list.css';
 
 var $ = require("jquery");
 
@@ -107,17 +111,18 @@ class TxtResultList extends React.Component{
 				var res = ((parseInt(val_a) < parseInt(val_b)) ? 1 : ((parseInt(val_a) > parseInt(val_b)) ? -1 : 0));
 			return res
 		}
+
 		return (
-				<div className='myclass'>
+				<div class="fixedTable">
 				<BootstrapTable data={result_items} pagination={true} columnFilter={true} striped={true} hover={true}>
-					<TableHeaderColumn dataField="Link" width="5%">Link</TableHeaderColumn>
-					<TableHeaderColumn dataField="Test Name" isKey={true} dataSort={true} sortFunc={sortName} width="15%">Test Name</TableHeaderColumn>
-					<TableHeaderColumn dataField="Branch" width="5%" dataSort={true}>Branch</TableHeaderColumn>
-					<TableHeaderColumn dataField="ACP Build" width="10%" dataSort={true} sortFunc={sortBuild}>ACP Build</TableHeaderColumn>
-					<TableHeaderColumn dataField="ACP IP" width="10%">ACP IP</TableHeaderColumn>
-					<TableHeaderColumn dataField="RmpSpTranscodePack Build" width="15%">RmpSpTranscodePack Build</TableHeaderColumn>
-					<TableHeaderColumn dataField="Test Suit" width="25%">Test Suit</TableHeaderColumn>
-					<TableHeaderColumn dataField="Pass Ratio" width="10%">Pass Ratio</TableHeaderColumn>
+					<TableHeaderColumn dataField="Link" width="75px">Link</TableHeaderColumn>
+					<TableHeaderColumn dataField="Test Name" isKey={true} dataSort={true} sortFunc={sortName} width="225px">Test Name</TableHeaderColumn>
+					<TableHeaderColumn dataField="Branch" width="75px" dataSort={true}>Branch</TableHeaderColumn>
+					<TableHeaderColumn dataField="ACP Build" width="150px" dataSort={true} sortFunc={sortBuild}>ACP Build</TableHeaderColumn>
+					<TableHeaderColumn dataField="ACP IP" width="150px">ACP IP</TableHeaderColumn>
+					<TableHeaderColumn dataField="RmpSpTranscodePack Build" width="200px">RmpSpTranscodePack Build</TableHeaderColumn>
+					<TableHeaderColumn dataField="Test Suit" width="375px">Test Suit</TableHeaderColumn>
+					<TableHeaderColumn dataField="Pass Ratio" width="150px">Pass Ratio</TableHeaderColumn>
 				</BootstrapTable>
 				</div>
 		       )
