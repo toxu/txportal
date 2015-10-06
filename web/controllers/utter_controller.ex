@@ -2,7 +2,6 @@ require Logger
 defmodule Txportal.UtterController do
   use Txportal.Web, :controller
 
-  @result ["hello"]
   @db_url "http://10.50.100.213:5984"
 
   def projects(conn, _) do
@@ -19,6 +18,14 @@ defmodule Txportal.UtterController do
     {:ok, rv} = :couchbeam_view.fetch(db, {"utter", "target_commits"}, [{:limit, 20}, :descending])
     jrv = rv |> Enum.map(&(convToMap(&1)))
     json conn, jrv
+  end
+
+  def start_service(conn, _) do
+    json conn, %{"result" => "ok"}
+  end
+
+  def stop_service(conn, _) do
+    json conn, %{"result" => "ok"}
   end
 
   defp getkey({items}) do
