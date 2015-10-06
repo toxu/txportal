@@ -75,22 +75,23 @@ class UtterRv extends React.Component{
                 </bs.Table>;
         }
 
+        var titleOverlay = <bs.Tooltip>{content.value["target-commit"].msg}</bs.Tooltip>;
         return (
            <div className="utter-result-item" key= {key}>
                 <div className={tileStatus}>
                 <span className={iconStatus} title="passed"/>
                 </div>
                 <div className="tile-main">
+                <bs.OverlayTrigger trigger="hover" overlay={titleOverlay}>
                 <h2><a className="tile-commit-message" href={svnLink} target="_blank">{content.value["target-commit"].msg}</a></h2>
+                </bs.OverlayTrigger>
                 <div className="tile-author">
                 <a href={authorLink} target="_blank">{author}</a> commited
                 </div>
                 </div>
                 <div className="tile-additional">
-                <div>
-                <p>Rev: {content.key}</p>
-                gtest <a href="#" onClick={this.open.bind(this)}>detail</a>
-                </div>
+                <div>rev: <a className="tile-commit-message" href={svnLink} target="_blank">{content.key}</a></div>
+                <div>gtest <a href="#" onClick={this.open.bind(this)}>detail</a></div>
                 </div>
 
                 <bs.Modal show={this.state.showModal} onHide={this.close.bind(this)}>
