@@ -26,7 +26,6 @@ import {Provider} from 'react-redux';
 import portalStore from "./store/portal_store";
 import MainForm from "./components/mainform";
 import 'bootstrap/dist/css/bootstrap.css';
-
 const store = portalStore();
 
 export default class Root extends React.Component {

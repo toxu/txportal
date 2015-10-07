@@ -11,6 +11,8 @@ import {
     TXT_RV_RECV,
     TXT_RV_SELECT_ONE,
     TXT_RV_INVALIDATE,
+    TXT_SELECTED_TEST,
+    TXT_CANCEL_SELECTED_TEST
 } from '../constants/action_types';
 
 function selectTxtRv(state = '', action) {
@@ -25,7 +27,8 @@ function selectTxtRv(state = '', action) {
 function loadTxtRv(state = {
     isFetching: false,
     didInvalidate: false,
-    items: []
+    items: [],
+    selected: []
 }, action) {
 	switch(action.type) {
 	case TXT_RV_INVALIDATE:
@@ -43,6 +46,15 @@ function loadTxtRv(state = {
 			didInvalidate: false,
 			items: action.txtRv,
 			lastUpdated: action.receivedAt
+		});
+	case TXT_SELECTED_TEST:
+		return Object.assign({}, state, {
+			selected: [...state.selected, action.selected]
+		});
+	case TXT_CANCEL_SELECTED_TEST:
+		return Object.assign({}, state, {
+			//selected: [state.selected.splice(state.selected.indexOf(action.unselected),1)]
+			selected: [...state.selected.slice(0, action.index), ...state.selected.slice(action.index+1)]
 		});
 	default:
 		return state;

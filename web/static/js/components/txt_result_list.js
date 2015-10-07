@@ -1,8 +1,9 @@
 import React from 'react';
 import {connect} from 'react-redux';
-import {fetchTxtRv} from '../actions/txt_results'
-
+import {fetchTxtRv, selectedTest, cancelSelectedTest} from '../actions/txt_results'
+import {Button} from 'react-bootstrap';
 import {BootstrapTable, TableHeaderColumn} from 'react-bootstrap-table';
+
 
 // CSS
 import 'react-bootstrap-table/css/react-bootstrap-table.css'
@@ -20,17 +21,12 @@ class TxtResultList extends React.Component{
         this.props.dispatch(fetchTxtRv());
 	}
 
+	list(){
+		console.log("clicked");
+		window.open("http://10.50.100.213:5984/_utils/multipages.html?"+ this.props.selected.toString());
+	}
+
 	render() {
-		var columns = [
-			{name:"Link"},
-			{name:"Test Name"},
-			{name:"Branch"},
-			{name:"ACP Build"},
-			{name:"ACP IP"},
-			{name:"RmpSpTranscodePack Build"},
-			{name:"Test Suit"},
-			{name:"Pass Ratio"}
-		];
 		var result = this.props.items.rows;
 		if(result === undefined){
 			result = [];
@@ -39,14 +35,35 @@ class TxtResultList extends React.Component{
 					(result) => {
 						var reslink = "http://10.50.100.213:5984/_utils/result-viewer.html?" + result.value[0];
 						var peflink = "http://10.50.100.213:5984/_utils/perfchart.html?" + result.value[0];
+						var ACPName;
+						switch(result.value[3]){
+							case "172.31.1.233":
+								ACPName = "ACP233";
+								break;
+							case "172.31.1.234":
+								ACPName = "ACP234";
+								break;
+							case "172.31.1.210":
+								ACPName = "ACP210";
+								break;
+							case "10.21.129.21":
+								ACPName = "Vlab";
+								break;
+							case "172.31.1.208":
+								ACPName = "ACP208";
+								break;
+							default:
+								ACPName = result.value[3];
+								break;
+						}
 						return {
-						"Link": <div><a target="_blank" href={reslink}>Result</a><br/><a target="_blank" href={peflink}>PERF</a></div>,
-						"Test Name": result.value[0],
+						"Link": <div><a target="_blank" href={reslink}>Result</a> & <a target="_blank" href={peflink}>PERF</a></div>,
+						"Test Name": ACPName + '-' + result.value[0],
 						"Branch": result.value[1],
 						"ACP Build": result.value[2],
 						"ACP IP": result.value[3],
-						"RmpSpTranscodePack Build": result.value[4],
-						"Test Suit": result.value[5],
+						"RSTP Build": result.value[4],
+						"Test Suit   (Passed/Total)": result.value[5] + " (" + result.value[6] + ")",
 						"Pass Ratio": result.value[6]
 						}
 					}
@@ -112,17 +129,45 @@ class TxtResultList extends React.Component{
 			return res
 		}
 
+		function onRowSelect(row, isSelected){
+			if(isSelected){
+				$("#listSelected").show();
+				var selected = this.props.selected.slice();
+				var name = row["Test Name"].split("-");
+				name.shift();
+				name = name.join("-");
+				this.props.dispatch(selectedTest(name));
+			}
+			else{
+				var selected = this.props.selected.slice();
+				if(selected.length === 1){
+					$("#listSelected").hide();
+				}
+				var name = row["Test Name"].split("-");
+				name.shift();
+				name = name.join("-");
+				var index = selected.indexOf(name);
+				this.props.dispatch(cancelSelectedTest(index));
+			}
+		}
+
+		var selectRowProp = {
+		  mode: "checkbox",
+		  clickToSelect: "true",
+		  bgColor: "#f0ad4e",
+		  hideSelectColumn: "true",
+		  onSelect: onRowSelect.bind(this)
+		};
+
 		return (
 				<div class="fixedTable">
-				<BootstrapTable data={result_items} pagination={true} columnFilter={true} striped={true} hover={true}>
-					<TableHeaderColumn dataField="Link" width="75px">Link</TableHeaderColumn>
-					<TableHeaderColumn dataField="Test Name" isKey={true} dataSort={true} sortFunc={sortName} width="225px">Test Name</TableHeaderColumn>
-					<TableHeaderColumn dataField="Branch" width="75px" dataSort={true}>Branch</TableHeaderColumn>
-					<TableHeaderColumn dataField="ACP Build" width="150px" dataSort={true} sortFunc={sortBuild}>ACP Build</TableHeaderColumn>
-					<TableHeaderColumn dataField="ACP IP" width="150px">ACP IP</TableHeaderColumn>
-					<TableHeaderColumn dataField="RmpSpTranscodePack Build" width="200px">RmpSpTranscodePack Build</TableHeaderColumn>
-					<TableHeaderColumn dataField="Test Suit" width="375px">Test Suit</TableHeaderColumn>
-					<TableHeaderColumn dataField="Pass Ratio" width="150px">Pass Ratio</TableHeaderColumn>
+				<Button bsStyle="primary" id = "listSelected" onClick={this.list.bind(this)}>ListSelected</Button>
+				<BootstrapTable data={result_items} pagination={true} columnFilter={true} striped={true} hover={true} selectRow={selectRowProp}>
+					<TableHeaderColumn dataField="Link" width="80px">Link</TableHeaderColumn>
+					<TableHeaderColumn dataField="Test Name" isKey={true} dataSort={true} sortFunc={sortName} width="150px">Test Name</TableHeaderColumn>
+					<TableHeaderColumn dataField="ACP Build" width="100px" dataSort={true} sortFunc={sortBuild}>ACP Build</TableHeaderColumn>
+					<TableHeaderColumn dataField="RSTP Build" width="100px">RSTP Build</TableHeaderColumn>
+					<TableHeaderColumn dataField="Test Suit   (Passed/Total)" width="220px">Test Suit   (Passed/Total)</TableHeaderColumn>
 				</BootstrapTable>
 				</div>
 		       )

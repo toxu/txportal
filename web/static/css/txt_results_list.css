@@ -1,7 +1,15 @@
 .react-bs-table > .table > thead > tr > th > .th-inner > input{
-  width:100%;
+  width: 100%;
+}
+
+.react-bs-table > .table > thead > tr > th:first-child{
+    display: None;
 }
 
 .react-bs-container{
-    min-width: 1500px;
+    min-width: 700px;
+}
+
+#listSelected {
+    display: None;
 }
