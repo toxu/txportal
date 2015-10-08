@@ -3,7 +3,9 @@ import {
     TXT_RV_REQ,
     TXT_RV_RECV,
     TXT_RV_SELECT_ONE,
-    TXT_RV_INVALIDATE
+    TXT_RV_INVALIDATE,
+    TXT_SELECTED_TEST,
+    TXT_CANCEL_SELECTED_TEST
 } from '../constants/action_types';
 
 export function txtRvSelectOne(txtRv) {
@@ -41,4 +43,18 @@ export function fetchTxtRv() {
 		.then(req => req.json())
 		.then(json => dispatch(txtRvRecv(json)));
 	}
+}
+
+export function selectedTest(testName) {
+	return {
+		type: TXT_SELECTED_TEST,
+		selected : testName
+	};
+}
+
+export function cancelSelectedTest(index) {
+	return {
+		type: TXT_CANCEL_SELECTED_TEST,
+		index : index
+	};
 }
