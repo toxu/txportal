@@ -3,6 +3,7 @@ import {connect} from 'react-redux';
 import { Grid, ProgressBar, Row, Col, Panel, Alert } from 'react-bootstrap';
 import Machine from './machine.js';
 import { fetchStatus } from '../../actions/scheduler.js';
+import "../../../css/scheduler.css"
 
 class Scheduler extends Component{
 
@@ -17,20 +18,20 @@ class Scheduler extends Component{
 
     render() {
         return (
-            <div>
+            <div className="scheduler">
                 { this.props.connectionLost &&
                 <Alert bsStyle="warning">
                     <strong>WARNING:</strong> Connection to Scheduler is lost!
                 </Alert>
                 }
-                { this.props.isFetching &&
+                { this.props.isFetching && Object.keys(this.props.machines).length == 0 &&
                 <div>
                     <p>Now fetching, please wait...</p>
                     <ProgressBar active now={100} />
                 </div>
                 }
                 { !this.props.isFetching &&
-                <div>
+                <div className="machineBox">
                     {Object.keys(this.props.machines).map(key =>
                         <Machine
                             key={key}

@@ -5,6 +5,9 @@ import {
 } from '../constants/action_types';
 import fetch from 'isomorphic-fetch';
 
+var schedulerUrl = "http://10.50.104.13:23456";
+//var schedulerUrl = "/api/scheduler";
+
 function fetchNow() {
      return {
          type: SCHEDULER_FETCH
@@ -18,11 +21,10 @@ function lostConnection() {
 }
 
 function updateMachineStatus(json) {
-    console.info("updateMachineStatus: json = ", json);
     return {
         type: SCHEDULER_UPDATESTATUS,
         receiveAt: Date.now(),
-        machine: {} // TODO
+        machines: json
     }
 }
 
@@ -30,7 +32,7 @@ function updateMachineStatus(json) {
 export function fetchStatus() {
     return dispatch => {
         dispatch(fetchNow());
-        return fetch("http://10.50.104.13:23456/status", {method: "POST", body: ""})
+        return fetch(schedulerUrl + "/status", {method: "POST", body: ""})
         // TODO handle exception !!!!!!!!!!!!!!!!!!!!!! Dispatch error message
         .then(response => response.json())
         .then(json => dispatch(updateMachineStatus(json)))

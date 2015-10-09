@@ -4,6 +4,8 @@ import { OverlayTrigger, Popover, ListGroup, ListGroupItem, Table, Well, Grid, P
 import MachineJob from './machineJob.js';
 import '../../../css/common.css';
 
+let nFinishedToShow = 3;
+
 export default class Machine extends Component{
 
     makeProp(name, value) {
@@ -15,14 +17,22 @@ export default class Machine extends Component{
         );
     }
 
+    isConcernedJob(info) {
+        if(info.clean) {
+            return false;
+        } else {
+            return true;
+        }
+    }
+
     getPanelHeader(props) {
         return (
-            <table style={{width: "100%"}}>
+            <table className="headerGroup">
                 <tr>
                     <td>
-                        <span style={{fontSize: "small"}}>ACP-{props.machineId}</span>
+                        <span className="headerLabel">ACP-{props.machineId}</span>
                     </td>
-                    <td style={{textAlign: "right"}}>
+                    <td className="headerCommand">
                         <OverlayTrigger trigger={["hover", "click"]} rootClose delayHide={1000} placement="bottom" overlay={this.getInfoPopover(props)}>
                             <span className="glyphicon glyphicon-info-sign"></span>
                         </OverlayTrigger>
@@ -49,7 +59,7 @@ export default class Machine extends Component{
     render() {
         let haveInfo = Object.keys(this.props.status).length !== 0;
         return (
-            <Panel collapsible defaultExpanded header={this.getPanelHeader(this.props)} style={{minWidth: '500', width: '48%', display: 'inline-block', margin: '1%'}}>
+            <Panel collapsible defaultExpanded header={this.getPanelHeader(this.props)} className="machinePanel">
                 {!haveInfo &&
                 <div>
                     Failed to retrieve status.
@@ -58,25 +68,38 @@ export default class Machine extends Component{
                 {haveInfo &&
                 <ListGroup fill>
                     {this.props.status.status.waiting.map(job => {
-                        return (
-                            <ListGroupItem key={job.ID}>
-                                <MachineJob key={job.ID} state="waiting" info={job}/>
-                            </ListGroupItem>
-                        );
+                        if (this.isConcernedJob(job)) {
+                            return (
+                                <ListGroupItem key={job.ID}>
+                                    <MachineJob key={job.ID} state="waiting" info={job}/>
+                                </ListGroupItem>
+                            );
+                        } else {
+                            return "";
+                        }
                     })}
                     {this.props.status.status.running.map(job => {
-                        return (
-                            <ListGroupItem key={job[1].ID} bsStyle="info">
-                                <MachineJob key={job[1].ID} state="running" info={job[1]}/>
-                            </ListGroupItem>
-                        );
+                        if (this.isConcernedJob(job[1])) {
+                            return (
+                                <ListGroupItem key={job[1].ID} bsStyle="info">
+                                    <MachineJob key={job[1].ID} state="running" info={job[1]}/>
+                                </ListGroupItem>
+                            );
+                        } else {
+                            return "";
+                        }
+
                     })}
-                    {this.props.status.status.finished.map(job => {
-                        return (
-                            <ListGroupItem key={job[1].ID} bsStyle="success">
-                                <MachineJob key={job[1].ID} state="finished" info={job[1]}/>
-                            </ListGroupItem>
-                        );
+                    {this.props.status.status.finished.map((job, i) => {
+                        if (this.isConcernedJob(job[1]) && i < nFinishedToShow) {
+                            return (
+                                <ListGroupItem key={job[1].ID} bsStyle="success">
+                                    <MachineJob key={job[1].ID} state="finished" info={job[1]}/>
+                                </ListGroupItem>
+                            );
+                        } else {
+                            return "";
+                        }
                     })}
                 </ListGroup>
                 }

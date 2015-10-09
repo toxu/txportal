@@ -19,6 +19,7 @@ defmodule Txportal.Router do
     get "/txt/results", TxtController, :results
 
     get "/txt/status", TxtWorkerController, :status
+    get "/scheduler/status", SchedulerController, :status
 
     get "/utter/projects", UtterController, :projects
     get "/utter/projects/:pname", UtterController, :project_results

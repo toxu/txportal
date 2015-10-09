@@ -1,0 +1,47 @@
+
+.scheduler {
+    height: 90vh;
+}
+
+.scheduler .machineBox {
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    flex-wrap: wrap;
+}
+
+.machinePanel {
+    min-width: 500px;
+    width: 45vw;
+    display: inline-block;
+    margin: 1%;
+}
+
+.machinePanel .headerGroup {
+    width: 100%;
+}
+
+.machinePanel .headerLabel {
+    font-size: small;
+}
+
+.machinePanel .headerCommand {
+    text-align: right;
+}
+
+.machineJobGroup {
+    width: 100%;
+}
+
+.machineJobGroup .endCell {
+    width: 50%;
+}
+
+.machineJobGroup .endCellAgo {
+    text-align: right;
+    font-size: smaller;
+}
+
+.machineJobGroup .endCell .progressBar {
+    margin-bottom: 0;
+}

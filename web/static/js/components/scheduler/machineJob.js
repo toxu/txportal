@@ -3,6 +3,7 @@ import {connect} from 'react-redux';
 import { ListGroup, ListGroupItem, Table, Well, Grid, ProgressBar, Row, Col, Panel, Button } from 'react-bootstrap';
 import { timeSince } from '../utils.js';
 import '../../../css/common.css';
+import '../../../css/scheduler.css';
 
 // TODO make it configurable
 let resultUrlPrefix = "http://10.50.100.213:5984/_utils/result-viewer.html?";
@@ -65,12 +66,12 @@ export default class MachineJob extends Component{
                     let [, done, total] = /(\d+)\/(\d+)/.exec(progress);
                     let percent = (100 * parseInt(done)) / parseInt(total);
                     content = (
-                        <table style={{width: "100%"}}>
+                        <table className="machineJobGroup">
                             <tbody>
                             <tr>
                                 <td>Running {suite} test on build {acpBuild}</td>
-                                <td style={{width: "50%"}}>
-                                    <ProgressBar style={{"marginBottom": "0"}} active label={progress} now={percent}/>
+                                <td className="endCell">
+                                    <ProgressBar className="progressBar" active label={progress} now={percent}/>
                                 </td>
                             </tr>
                             </tbody>
@@ -111,11 +112,11 @@ export default class MachineJob extends Component{
                     message = <td>Unknown job</td>;
                 }
                 content = (
-                    <table style={{width: "100%"}}>
+                    <table className="machineJobGroup">
                         <tbody>
                         <tr>
                             {message}
-                            <td style={{"textAlign": "right", "fontSize": "smaller"}}>{ago}</td>
+                            <td className="endCellAgo">{ago}</td>
                         </tr>
                         </tbody>
                     </table>
