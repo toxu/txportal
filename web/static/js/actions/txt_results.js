@@ -39,7 +39,7 @@ export function txtRvRecv(json) {
 
 export function fetchTxtRv() {
 	return dispatch => {
-		return fetch('/api/txt/results')
+		return fetch('/api/couchpotato/txt_results/design/txtbrowser/view/txtbrowser')
 		.then(req => req.json())
 		.then(json => dispatch(txtRvRecv(json)));
 	}
