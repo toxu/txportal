@@ -10,7 +10,8 @@ import Nav from 'react-bootstrap/lib/Nav';
 import MenuItem from 'react-bootstrap/lib/MenuItem';
 import TxtResultList from "./txt_result_list";
 import Utter from "./utter";
-import Worker from './worker'
+import Worker from './worker';
+import Scheduler from "./scheduler/scheduler.js";
 
 // CSS
 import '../../css/mainform.css';
@@ -39,6 +40,9 @@ class MainForm extends React.Component{
         case 3:
             content = <Worker/>;
             break;
+        case 4:
+            content = <Scheduler/>;
+            break;
         default:
             content = <div/>;
             break;
@@ -50,6 +54,7 @@ class MainForm extends React.Component{
                 <NavItem eventKey={1} href="javascript:void(0);" onClick={this.handleSelect.bind(this, 1)}>Test Results</NavItem>
                 <NavItem eventKey={2} href="javascript:void(0);" onClick={this.handleSelect.bind(this, 2)}>Utter Results</NavItem>
                 <NavItem eventKey={3} href="javascript:void(0);" onClick={this.handleSelect.bind(this, 3)}>TXT Workers</NavItem>
+                <NavItem eventKey={4} href="javascript:void(0);" onClick={this.handleSelect.bind(this, 4)}>Scheduler</NavItem>
                 </Nav>
                 </Navbar>
                 <div className='portal-content'> {content} </div>

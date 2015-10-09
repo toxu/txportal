@@ -12,8 +12,12 @@ import {
     TXT_RV_SELECT_ONE,
     TXT_RV_INVALIDATE,
     TXT_SELECTED_TEST,
-    TXT_CANCEL_SELECTED_TEST
+    TXT_CANCEL_SELECTED_TEST,
+	TXT_WORKER_STATUS_REQ,
+	TXT_WORKER_STATUS_RECV
 } from '../constants/action_types';
+
+import scheduler from './scheduler.js';
 
 function selectTxtRv(state = '', action) {
 	switch(action.type) {
@@ -23,6 +27,25 @@ function selectTxtRv(state = '', action) {
 		return state;
 	}
 }
+
+function txtWorker(state = {
+	items: []
+}, action) {
+	switch(action.type) {
+		case TXT_WORKER_STATUS_REQ:
+			return Object.assign({}, state, {
+				isFetching: true,
+			});
+		case TXT_WORKER_STATUS_RECV:
+			return Object.assign({}, state, {
+				isFetching: false,
+				items: action.workerStatusRv,
+				lastUpdated: action.receivedAt
+			});
+		default:
+			return state;
+	}
+}	
 
 function loadTxtRv(state = {
     isFetching: false,
@@ -104,11 +127,14 @@ function mainform(state = {
     }
 }
 
+
 const rootReducer = combineReducers({
     mainform,
     loadTxtRv,
     selectTxtRv,
-    utter
+    utter,
+	txtWorker,
+	scheduler
 });
 
 export default rootReducer;
