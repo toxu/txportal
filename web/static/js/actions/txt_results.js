@@ -5,6 +5,7 @@ import {
     TXT_RV_SELECT_ONE,
     TXT_RV_INVALIDATE,
     TXT_SELECTED_TEST,
+	TXT_WORKER_STATUS_RECV,
     TXT_CANCEL_SELECTED_TEST
 } from '../constants/action_types';
 
@@ -42,7 +43,23 @@ export function fetchTxtRv() {
 		return fetch('/api/txt/results')
 		.then(req => req.json())
 		.then(json => dispatch(txtRvRecv(json)));
-	}
+	};
+}
+
+export function recvWorkerStatus(json) {
+	return {
+		type: TXT_WORKER_STATUS_RECV,
+		workerStatusRv: json,
+		receivedAt: Date.now()
+	};
+}
+
+export function fetchWorkerStatus() {
+	return dispatch => {
+		return fetch('/api/txt/status')
+		.then(req => req.json())
+		.then(json => dispatch(recvWorkerStatus(json)));
+	};
 }
 
 export function selectedTest(testName) {
