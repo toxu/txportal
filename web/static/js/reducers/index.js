@@ -15,6 +15,8 @@ import {
     TXT_CANCEL_SELECTED_TEST
 } from '../constants/action_types';
 
+import scheduler from './scheduler.js';
+
 function selectTxtRv(state = '', action) {
 	switch(action.type) {
 	case TXT_RV_SELECT_ONE:
@@ -92,7 +94,7 @@ function utter(state = {
 }
 
 function mainform(state = {
-    activePageId: 1
+    activePageId: 4
 }, action) {
     switch (action.type) {
     case MF_PAGE_SELECT:
@@ -104,11 +106,13 @@ function mainform(state = {
     }
 }
 
+
 const rootReducer = combineReducers({
     mainform,
     loadTxtRv,
     selectTxtRv,
-    utter
+    utter,
+	scheduler
 });
 
 export default rootReducer;
