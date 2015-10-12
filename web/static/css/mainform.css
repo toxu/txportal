@@ -1,8 +1,10 @@
 /* Supporting marketing content */
 .portal-content {
 	display: block;
-	margin-left: 200px;
-	margin-right: 200px;
-	margin-top: 60px;
+	/*margin-left: 200px;*/
+	/*margin-right: 200px;*/
+	/*max-width:980px;*/
+	max-width:1440px;
+	margin: 60px auto 0px auto;
 }
 
