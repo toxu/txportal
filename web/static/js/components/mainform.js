@@ -51,16 +51,10 @@ class MainForm extends React.Component{
                 <div>
                 <Navbar brand="Tx Portal" activeKey={this.props.activePageId} fixedTop={true} fluid={true}>
                 <Nav>
-		<NavDropdown eventKey={1} title="TXT" id="txt-dropdown">
-                    <MenuItem eventKey="1.1" href="javascript:void(0);" onSelect={this.handleSelect.bind(this, 1)}>Results</MenuItem>
-                    <MenuItem eventKey="1.2">Statistics</MenuItem>
-                    <MenuItem eventKey="1.3" href="javascript:void(0);" onSelect={this.handleSelect.bind(this, 3)}>Workers</MenuItem>
-                    <MenuItem eventKey="1.4" href="javascript:void(0);" onSelect={this.handleSelect.bind(this, 4)}>Scheduler</MenuItem>
-		</NavDropdown>
-		<NavDropdown eventKey={2} title="Utter" id="utter-dropdown">
-                    <MenuItem eventKey="2.1" href="javascript:void(0);" onSelect={this.handleSelect.bind(this, 2)}>Results</MenuItem>
-                    <MenuItem eventKey="2.2">Workers</MenuItem>
-		</NavDropdown>
+                <NavItem eventKey={1} href="javascript:void(0);" onClick={this.handleSelect.bind(this, 1)}>Test Results</NavItem>
+                <NavItem eventKey={2} href="javascript:void(0);" onClick={this.handleSelect.bind(this, 2)}>Utter Results</NavItem>
+                <NavItem eventKey={3} href="javascript:void(0);" onClick={this.handleSelect.bind(this, 3)}>TXT Workers</NavItem>
+                <NavItem eventKey={4} href="javascript:void(0);" onClick={this.handleSelect.bind(this, 4)}>Scheduler</NavItem>
                 </Nav>
                 </Navbar>
                 <div className='portal-content'> {content} </div>
