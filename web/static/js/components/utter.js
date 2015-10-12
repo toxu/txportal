@@ -44,9 +44,11 @@ class Utter extends React.Component{
         }
 
         return (
+	<div className="utter-result-main">
             <Tabs activeKey={activeProjectId} onSelect={this.handleSelect.bind(this)}>
                 {tabs}
             </Tabs>
+	</div>
         );
     }
 }

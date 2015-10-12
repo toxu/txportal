@@ -1,4 +1,10 @@
 /* Supporting marketing content */
+
+.utter-result-main {
+	margin-left:10%;
+	max-width:980px;
+}
+
 .utter-result-list {
 	box-sizing: border-box;
 	color: rgb(141, 141, 141);
