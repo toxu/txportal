@@ -12,7 +12,7 @@
 
 .machinePanel {
     min-width: 500px;
-    width: 45vw;
+    width: 48%;
     display: inline-block;
     margin: 1%;
 }
@@ -29,19 +29,15 @@
     text-align: right;
 }
 
-.machineJobGroup {
+.machineJobGroup.container {
     width: 100%;
 }
 
-.machineJobGroup .endCell {
-    width: 50%;
-}
-
-.machineJobGroup .endCellAgo {
+.machineJobGroup.container .endItem {
     text-align: right;
     font-size: smaller;
 }
 
-.machineJobGroup .endCell .progressBar {
+.machineJobGroup.container .progressBar {
     margin-bottom: 0;
 }

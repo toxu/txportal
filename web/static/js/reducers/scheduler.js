@@ -116,8 +116,8 @@ var sampleMachineSettings = {
 export default function scheduler(state = {
     isFetching: false,
     connectionLost: false,
-    updateInterval: 5000,
-    machines: sampleMachineSettings
+    updateInterval: 500000000,
+    machines: {}
 }, action) {
     switch (action.type) {
         case SCHEDULER_FETCH:
