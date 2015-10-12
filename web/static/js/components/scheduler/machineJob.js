@@ -66,16 +66,13 @@ export default class MachineJob extends Component{
                     let [, done, total] = /(\d+)\/(\d+)/.exec(progress);
                     let percent = (100 * parseInt(done)) / parseInt(total);
                     content = (
-                        <table className="machineJobGroup">
-                            <tbody>
-                            <tr>
-                                <td>Running {suite} test on build {acpBuild}</td>
-                                <td className="endCell">
-                                    <ProgressBar className="progressBar" active label={progress} now={percent}/>
-                                </td>
-                            </tr>
-                            </tbody>
-                        </table>
+                        <Grid className="machineJobGroup">
+                            <Row>
+                                <Col md={8}>Running {suite} test on build {acpBuild}</Col>
+                                <Col md={4} className="endItem"><ProgressBar className="progressBar" active label={progress} now={percent}/></Col>
+                            </Row>
+                        </Grid>
+
                     );
                 } else if (this.props.info.clean) {
                     // clean job
@@ -112,14 +109,12 @@ export default class MachineJob extends Component{
                     message = <td>Unknown job</td>;
                 }
                 content = (
-                    <table className="machineJobGroup">
-                        <tbody>
-                        <tr>
-                            {message}
-                            <td className="endCellAgo">{ago}</td>
-                        </tr>
-                        </tbody>
-                    </table>
+                    <Grid className="machineJobGroup">
+                        <Row>
+                            <Col md={8}>{message}</Col>
+                            <Col md={4} className="endItem">{ago}</Col>
+                        </Row>
+                    </Grid>
                 );
                 break;
         }
