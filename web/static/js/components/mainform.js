@@ -55,6 +55,7 @@ class MainForm extends React.Component{
                     <MenuItem eventKey="1.1" href="javascript:void(0);" onSelect={this.handleSelect.bind(this, 1)}>Results</MenuItem>
                     <MenuItem eventKey="1.2">Statistics</MenuItem>
                     <MenuItem eventKey="1.3" href="javascript:void(0);" onSelect={this.handleSelect.bind(this, 3)}>Workers</MenuItem>
+                    <MenuItem eventKey="1.4" href="javascript:void(0);" onSelect={this.handleSelect.bind(this, 4)}>Scheduler</MenuItem>
 		</NavDropdown>
 		<NavDropdown eventKey={2} title="Utter" id="utter-dropdown">
                     <MenuItem eventKey="2.1" href="javascript:void(0);" onSelect={this.handleSelect.bind(this, 2)}>Results</MenuItem>
