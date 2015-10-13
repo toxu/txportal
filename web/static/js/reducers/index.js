@@ -11,8 +11,12 @@ import {
     TXT_RV_RECV,
     TXT_RV_SELECT_ONE,
     TXT_RV_INVALIDATE,
-    TXT_SELECTED_TEST,
-    TXT_CANCEL_SELECTED_TEST
+    TXT_SET_FILTER,
+    TXT_SET_DATE,
+    TXT_Filter_BY_NAME,
+    TXT_Filter_BY_RSTP,
+    TXT_Filter_BY_TAG,
+    TXT_Filter_BY_RATIO
 } from '../constants/action_types';
 
 function selectTxtRv(state = '', action) {
@@ -28,7 +32,13 @@ function loadTxtRv(state = {
     isFetching: false,
     didInvalidate: false,
     items: [],
-    selected: []
+   	filter: "",
+   	startDate: "",
+   	endDate: "",
+   	filterByName: "",
+   	filterByRSTP: "",
+   	filterByTag: "",
+   	filterByRatio: ""
 }, action) {
 	switch(action.type) {
 	case TXT_RV_INVALIDATE:
@@ -47,14 +57,42 @@ function loadTxtRv(state = {
 			items: action.txtRv,
 			lastUpdated: action.receivedAt
 		});
-	case TXT_SELECTED_TEST:
+	case TXT_SET_FILTER:
 		return Object.assign({}, state, {
-			selected: [...state.selected, action.selected]
+			filter: action.filter
 		});
-	case TXT_CANCEL_SELECTED_TEST:
+	case TXT_SET_DATE:
 		return Object.assign({}, state, {
-			//selected: [state.selected.splice(state.selected.indexOf(action.unselected),1)]
-			selected: [...state.selected.slice(0, action.index), ...state.selected.slice(action.index+1)]
+			startDate: action.startDate,
+			endDate: action.endDate
+		});
+	case TXT_Filter_BY_NAME:
+		if(action.filterByName == 'IP-')
+			var name = "";
+		else
+			var name = action.filterByName;
+		return Object.assign({}, state, {
+			filterByName: name
+		});
+	case TXT_Filter_BY_RSTP:
+		if(action.filterByRSTP == 'TXP-')
+			var rstp = "";
+		else
+			var rstp = action.filterByRSTP;
+		return Object.assign({}, state,{
+			filterByRSTP: rstp
+		});
+	case TXT_Filter_BY_TAG:
+		if(state.filterByTag == action.filterByTag)
+			var tag = "";
+		else
+			var tag = action.filterByTag;
+		return Object.assign({}, state,{
+			filterByTag: tag
+		});
+	case TXT_Filter_BY_RATIO:
+		return Object.assign({}, state,{
+			filterByRatio: action.filterByRatio
 		});
 	default:
 		return state;
