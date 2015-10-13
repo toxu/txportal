@@ -31,7 +31,7 @@ var sampleMachineSettings = {
                     "ID": 71707,
                     "txtBuild": "newTXT",
                     "txtBuildUrl": "\\\\10.50.100.188\\Users\\ctsang\\Documents\\projects\\ACP_StandaloneTxTest-trunk\\ACP_StandaloneTxTest\\txt\\output\\results\\20151008-123703",
-                    "startTime": 1444279026.724,
+                    "startTime": 1444479026.724,
                     "timestamp": "20151008-123703",
                     "progress": "100/124",
                     "transcodePackBuild": "1.15.0.0.181",
@@ -116,7 +116,7 @@ var sampleMachineSettings = {
 export default function scheduler(state = {
     isFetching: false,
     connectionLost: false,
-    updateInterval: 500000000,
+    updateInterval: 2000,
     machines: {}
 }, action) {
     switch (action.type) {

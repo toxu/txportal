@@ -33,7 +33,7 @@ export default class Machine extends Component{
                         <span className="headerLabel">ACP-{props.machineId}</span>
                     </td>
                     <td className="headerCommand">
-                        <OverlayTrigger trigger={["hover", "click"]} rootClose delayHide={1000} placement="bottom" overlay={this.getInfoPopover(props)}>
+                        <OverlayTrigger trigger="click" rootClose placement="bottom" overlay={this.getInfoPopover(props)}>
                             <span className="glyphicon glyphicon-info-sign"></span>
                         </OverlayTrigger>
                     </td>
@@ -44,7 +44,7 @@ export default class Machine extends Component{
 
     getInfoPopover(props) {
         return (
-        <Popover id={props.machineId} title="Machine Details">
+        <Popover id={props.machineId} className="myPopover" title="Machine Details">
             <table className="propTable">
                 <tbody>
                 {this.makeProp("Worker", <a href={props.status.workerUrl}>{props.status.worker}</a>)}
@@ -56,10 +56,19 @@ export default class Machine extends Component{
         );
     }
 
+    shouldComponentUpdate(nextProps, nextState) {
+        // to accelerate things
+        if (this.props.value != nextProps.value) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+
     render() {
         let haveInfo = Object.keys(this.props.status).length !== 0;
         return (
-            <Panel collapsible defaultExpanded header={this.getPanelHeader(this.props)} className="machinePanel">
+            <Panel header={this.getPanelHeader(this.props)} className="machinePanel">
                 {!haveInfo &&
                 <div>
                     Failed to retrieve status.
@@ -67,7 +76,7 @@ export default class Machine extends Component{
                 }
                 {haveInfo &&
                 <ListGroup fill>
-                    {this.props.status.status.waiting.map(job => {
+                    {this.props.status.status.waiting && this.props.status.status.waiting.map(job => {
                         if (this.isConcernedJob(job)) {
                             return (
                                 <ListGroupItem key={job.ID}>
@@ -78,7 +87,7 @@ export default class Machine extends Component{
                             return "";
                         }
                     })}
-                    {this.props.status.status.running.map(job => {
+                    {this.props.status.status.running && this.props.status.status.running.map(job => {
                         if (this.isConcernedJob(job[1])) {
                             return (
                                 <ListGroupItem key={job[1].ID} bsStyle="info">
@@ -90,7 +99,7 @@ export default class Machine extends Component{
                         }
 
                     })}
-                    {this.props.status.status.finished.map((job, i) => {
+                    {this.props.status.status.finished && this.props.status.status.finished.map((job, i) => {
                         if (this.isConcernedJob(job[1]) && i < nFinishedToShow) {
                             return (
                                 <ListGroupItem key={job[1].ID} bsStyle="success">

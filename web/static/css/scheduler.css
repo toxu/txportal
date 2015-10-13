@@ -41,3 +41,19 @@
 .machineJobGroup.container .progressBar {
     margin-bottom: 0;
 }
+
+.propPanel.container {
+    width: 100%;
+}
+
+.propPanel.container .key{
+    font-weight: bold;
+}
+
+.propPanel.container .value{
+}
+
+.myPopover.popover {
+    width: 400px;
+    max-width:400px;
+}

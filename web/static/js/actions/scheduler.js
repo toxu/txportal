@@ -14,7 +14,7 @@ function fetchNow() {
      };
 }
 
-function lostConnection() {
+function lostConnection(msg) {
     return {
         type: SCHEDULER_CONNECTIONLOST
     };
@@ -35,7 +35,7 @@ export function fetchStatus() {
         return fetch(schedulerUrl + "/status", {method: "POST", body: ""})
         // TODO handle exception !!!!!!!!!!!!!!!!!!!!!! Dispatch error message
         .then(response => response.json())
-        .then(json => dispatch(updateMachineStatus(json)))
-        .catch(result => dispatch(lostConnection()));
+        .then(json => dispatch(updateMachineStatus(json)));
+        //.catch(result => dispatch(lostConnection(result)));
     };
 }

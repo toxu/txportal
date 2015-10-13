@@ -24,20 +24,22 @@ class Scheduler extends Component{
                     <strong>WARNING:</strong> Connection to Scheduler is lost!
                 </Alert>
                 }
-                { this.props.isFetching && Object.keys(this.props.machines).length == 0 &&
+                { this.props.isFetching && Object.keys(this.props.machines).length === 0 &&
                 <div>
                     <p>Now fetching, please wait...</p>
                     <ProgressBar active now={100} />
                 </div>
                 }
-                { !this.props.isFetching &&
+                { Object.keys(this.props.machines).length !== 0 &&
                 <div className="machineBox">
-                    {Object.keys(this.props.machines).map(key =>
+                    {Object.keys(this.props.machines).map(key => {
+                        return (
                         <Machine
                             key={key}
                             status={this.props.machines[key]}
                             machineId={key}
-                        />
+                        />);
+                        }
                     )}
                 </div>
                 }
