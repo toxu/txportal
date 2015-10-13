@@ -166,7 +166,7 @@ export default class MachineJob extends Component{
                 if (type === "upgrade") {
                     const { upgrade, timestamp } = this.props.info;
                     let isShowIcon = result === "success" && finished !== "aborted";
-                    message = <td>{this.getResultIcon(isShowIcon)} Upgraded ACP to build {upgrade}</td>;
+                    message = <span>{this.getResultIcon(isShowIcon)} Upgraded ACP to build {upgrade}</span>;
                 } else if (type === "transcode") {
                     const { testSuiteName, acpBuild, timestamp, testSuiteNumOfCase } = this.props.info;
                     let { numSuccs } = this.props.info;
@@ -176,19 +176,19 @@ export default class MachineJob extends Component{
                     let isShowIcon = finished !== "aborted" && numSuccs != 0;
                     let resultUrl = resultUrlPrefix + timestamp;
                     message =
-                        <td>{this.getResultIcon(isShowIcon)} Completed {testSuiteName} test on build {acpBuild}: <a
-                            href={resultUrl}>{numSuccs}/{testSuiteNumOfCase}</a></td>;
+                        <span>{this.getResultIcon(isShowIcon)} Completed {testSuiteName} test on build {acpBuild}: <a
+                            href={resultUrl}>{numSuccs}/{testSuiteNumOfCase}</a></span>;
                 } else if (type === "clean") {
                     let isShowIcon = finished !== "aborted";
-                    message = <td>{this.getResultIcon(isShowIcon)} Freed up disk space</td>;
+                    message = <span>{this.getResultIcon(isShowIcon)} Freed up disk space</span>;
                 } else {
-                    message = <td>Unknown job</td>;
+                    message = <span>Unknown job</span>;
                 }
                 content = (
                     <Grid className="machineJobGroup">
                         <Row>
-                            <Col md={8}>{message}</Col>
-                            <Col md={4} className="endItem">{ago}</Col>
+                            <Col md={9}>{message}</Col>
+                            <Col md={3} className="endItem">{ago}</Col>
                         </Row>
                     </Grid>
                 );

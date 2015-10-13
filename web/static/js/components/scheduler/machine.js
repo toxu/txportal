@@ -67,14 +67,10 @@ export default class Machine extends Component{
 
     render() {
         let haveInfo = Object.keys(this.props.status).length !== 0;
+        //console.info("machine", this.props.machineId, " haveInfo = ", haveInfo);
         return (
             <Panel header={this.getPanelHeader(this.props)} className="machinePanel">
-                {!haveInfo &&
-                <div>
-                    Failed to retrieve status.
-                </div>
-                }
-                {haveInfo &&
+                {haveInfo?
                 <ListGroup fill>
                     {this.props.status.status.waiting && this.props.status.status.waiting.map(job => {
                         if (this.isConcernedJob(job)) {
@@ -111,6 +107,10 @@ export default class Machine extends Component{
                         }
                     })}
                 </ListGroup>
+                :
+                <div>
+                    Failed to retrieve status.
+                </div>
                 }
             </Panel>
         );
