@@ -144,16 +144,16 @@ export default class MachineJob extends Component{
                         );
                     } else if (type === "transcode") {
                         // run test
-                        const { testSuiteName, subset, tag, acpBuild, progress } = this.props.info;
+                        const { testSuiteName, subset, tag, acpBuild, progress, timestamp } = this.props.info;
                         let [, done, total] = /(\d+)\/(\d+)/.exec(progress);
                         let percent = (100 * parseInt(done)) / parseInt(total);
                         runContent = (
                             <Grid className="machineJobGroup">
                                 <Row>
                                     <Col md={8}>Running {testSuiteName} test on build {acpBuild}</Col>
-                                    <Col md={4} className="endItem"><ProgressBar className="progressBar" active
+                                    <Col md={4} className="endItem"><a href={`${this.props.workerUrl}/result/${timestamp}`}><ProgressBar className="progressBar" active
                                                                                  label={progress} min={-20}
-                                                                                 now={percent}/></Col>
+                                                                                 now={percent}/></a></Col>
                                 </Row>
                             </Grid>
                         );
@@ -200,8 +200,7 @@ export default class MachineJob extends Component{
                         let isShowIcon = finished !== "aborted" && numSuccs != 0;
                         let resultUrl = resultUrlPrefix + timestamp;
                         message =
-                            <span>{this.getResultIcon(isShowIcon)} Completed {testSuiteName}
-                                test on build {acpBuild}: <a
+                            <span>{this.getResultIcon(isShowIcon)} Completed {testSuiteName} test on build {acpBuild}: <a
                                     href={resultUrl}>{numSuccs}/{testSuiteNumOfCase}</a></span>;
                     } else if (type === "clean") {
                         let isShowIcon = finished !== "aborted";
