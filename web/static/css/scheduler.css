@@ -25,6 +25,10 @@
     font-size: small;
 }
 
+.machinePanel .headerLabel a {
+    color: #333;
+}
+
 .machinePanel .headerCommand {
     text-align: right;
 }

@@ -8,6 +8,7 @@ import {
 var sampleMachineSettings = {
     208: {
         setting: {
+            "ACP_management_IP": "172.31.1.207",
             "streamer": "10.51.100.61",
             supported_test_types: ["TS","StatMux"]
         },
@@ -37,6 +38,15 @@ var sampleMachineSettings = {
                     "transcodePackBuild": "1.15.0.0.181",
                     "testSuiteNumOfCase": 124,
                     "ACP_management_IP": "172.31.1.208"
+                }],
+                ["208", {
+                    "timestamp": "20151013-200531",
+                    "upgrade": "1.2.x.0",
+                    "ID": 40011,
+                    "progress": [
+                        "ls / ",
+                        "..."
+                    ]
                 }]
             ],
             waiting: [
