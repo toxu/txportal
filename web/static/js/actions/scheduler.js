@@ -1,8 +1,7 @@
 import {
     SCHEDULER_FETCH,
     SCHEDULER_UPDATESTATUS,
-    SCHEDULER_CONNECTIONLOST,
-    SCHEDULER_LOCK_MACHINE
+    SCHEDULER_CONNECTIONLOST
 } from '../constants/action_types';
 import fetch from 'isomorphic-fetch';
 
@@ -40,9 +39,8 @@ export function fetchStatus() {
 }
 
 export function lockMachine(machineId, lock) {
-    return {
-        type: SCHEDULER_LOCK_MACHINE,
-        machineId: machineId,
-        lock: lock
+    return dispatch => {
+        return fetch(schedulerUrl + "/lockMachine", {method: "POST", body: JSON.stringify({setting: machineId, lock: lock})})
+        .catch(result => console.info("lockMachine failed: ", result));
     };
 }

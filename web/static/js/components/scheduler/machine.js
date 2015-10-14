@@ -35,13 +35,13 @@ export default class Machine extends Component{
             );
         } else if (props.status.lock) {
             return (
-                <OverlayTrigger placement="bottom" overlay={<Tooltip id={`${props.machineId}-Accessibility`}>Click to unlock the machine</Tooltip>}>
+                <OverlayTrigger placement="bottom" overlay={<Tooltip id={`${props.machineId}-Accessibility`}>Locked. Click to unlock it</Tooltip>}>
                     <span className="glyphicon glyphicon-ban-circle" onClick={props.onLockMachine.bind(null, props.machineId, false)}></span>
                 </OverlayTrigger>
             );
         } else {
             return (
-            <OverlayTrigger placement="bottom" overlay={<Tooltip id={`${props.machineId}-Accessibility`}>Click to lock the machine</Tooltip>}>
+            <OverlayTrigger placement="bottom" overlay={<Tooltip id={`${props.machineId}-Accessibility`}>Available. Click to lock it</Tooltip>}>
                 <span className="glyphicon glyphicon-ok-circle" onClick={props.onLockMachine.bind(null, props.machineId, true)}></span>
             </OverlayTrigger>
             );
