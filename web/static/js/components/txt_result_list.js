@@ -1,13 +1,18 @@
 import React from 'react';
 import {connect} from 'react-redux';
-import {fetchTxtRv, selectedTest, cancelSelectedTest} from '../actions/txt_results'
-import {Button} from 'react-bootstrap';
-import {BootstrapTable, TableHeaderColumn} from 'react-bootstrap-table';
+import {fetchTxtRv, setFilter, setDateInfo, filterByRatio} from '../actions/txt_results';
+import {Button, Row, Col} from 'react-bootstrap';
+
+import TxtRv from './txt_result';
+var DateRangePicker = require('react-bootstrap-daterangepicker');
+var moment = require('moment');
+
 
 
 // CSS
-import 'react-bootstrap-table/css/react-bootstrap-table.css'
+import 'react-bootstrap-daterangepicker/css/daterangepicker.css';
 import '../../css/txt_results_list.css';
+import 'bootstrap/dist/css/bootstrap.min.css';
 
 var $ = require("jquery");
 
@@ -19,164 +24,327 @@ class TxtResultList extends React.Component{
 
 	componentDidMount() {
         this.props.dispatch(fetchTxtRv());
+        this.props.dispatch(setDateInfo(moment().subtract(29,'days').format('YYYY-MM-DD'), moment().format('YYYY-MM-DD')));
 	}
 
-	list(){
-		console.log("clicked");
-		window.open("http://10.50.100.213:5984/_utils/multipages.html?"+ this.props.selected.toString());
-	}
+	onKeyUp(event) {
+        this.props.dispatch(setFilter(event.target.value));
+    }
+
+    onKeyUpRatio(event){
+		this.props.dispatch(filterByRatio(event.target.value));
+    }
+
+    onApply(event, picker){
+    	this.props.dispatch(setDateInfo(picker.startDate.format('YYYY-MM-DD'), picker.endDate.format('YYYY-MM-DD')));
+    }
 
 	render() {
-		var result = this.props.items.rows;
-		if(result === undefined){
-			result = [];
+		const {dispatch, rows, startDate, endDate, filterByName, filterByRSTP, filterByTag, filterByRatio} = this.props;
+		var ranges = {
+				'Today': [moment(), moment()],
+				'Yesterday': [moment().subtract(1, 'days'), moment().subtract(1, 'days')],
+				'Last 7 Days': [moment().subtract(6, 'days'), moment()],
+				'Last 30 Days': [moment().subtract(29, 'days'), moment()],
+				'This Month': [moment().startOf('month'), moment().endOf('month')],
+				'Last Month': [moment().subtract(1, 'month').startOf('month'), moment().subtract(1, 'month').endOf('month')]
+				};
+
+		if(filterByName != ''){
+			$(".Name").css("background-color", "yellow");
 		}
-		var result_items = result.map(
-					(result) => {
-						var reslink = "http://10.50.100.213:5984/_utils/result-viewer.html?" + result.value[0];
-						var peflink = "http://10.50.100.213:5984/_utils/perfchart.html?" + result.value[0];
-						var ACPName;
-						switch(result.value[3]){
-							case "172.31.1.233":
-								ACPName = "ACP233";
-								break;
-							case "172.31.1.234":
-								ACPName = "ACP234";
-								break;
-							case "172.31.1.210":
-								ACPName = "ACP210";
-								break;
-							case "10.21.129.21":
-								ACPName = "Vlab";
-								break;
-							case "172.31.1.208":
-								ACPName = "ACP208";
-								break;
-							default:
-								ACPName = result.value[3];
-								break;
-						}
-						return {
-						"Link": <div><a target="_blank" href={reslink}>Result</a> & <a target="_blank" href={peflink}>PERF</a></div>,
-						"Test Name": ACPName + '-' + result.value[0],
-						"Branch": result.value[1],
-						"ACP Build": result.value[2],
-						"ACP IP": result.value[3],
-						"RSTP Build": result.value[4],
-						"Test Suit   (Passed/Total)": result.value[5] + " (" + result.value[6] + ")",
-						"Pass Ratio": result.value[6]
-						}
-					}
-				)
-		function sortBuild(a, b, order){
-				var build_a = a["ACP Build"].split(".");
-				var build_b = b["ACP Build"].split(".");
-				var val_a = "";
-				var val_b = "";
-				for(var i=0;i<build_a.length;i++){
-					var item = build_a[i];
-					item = parseInt(item).toString();
-					if(item.length == 1) {
-	                	val_a += "00" + item;
-	            	} else if(item.length == 2) {
-	                	val_a += "0" + item;
-	            	} else {
-	                	val_a += item;
-	            	}
-				}
-				for(var i=0;i<build_b.length;i++){
-					var item = build_b[i];
-					item = parseInt(item).toString();
-					if(item.length == 1) {
-	                	val_b += "00" + item;
-	            	} else if(item.length == 2) {
-	                	val_b += "0" + item;
-	            	} else {
-	                	val_b += item;
-	            	}
-				}
-				if(order=="asc")
-					var res = ((parseInt(val_a) < parseInt(val_b)) ? -1 : ((parseInt(val_a) > parseInt(val_b)) ? 1 : 0));
-				else
-					var res = ((parseInt(val_a) < parseInt(val_b)) ? 1 : ((parseInt(val_a) > parseInt(val_b)) ? -1 : 0));
-				return res
+		else{
+			$(".Name").css("background-color", "white");
+		}
+		if(filterByRSTP != ''){
+			$(".RSTP").css("background-color", "yellow");
+		}
+		else{
+			$(".RSTP").css("background-color", "white");
 		}
 
-		function sortName(a, b, order){
-			var name_a = a["Test Name"].split("-");
-			var name_b = b["Test Name"].split("-");
-			var val_a = "";
-			var val_b = "";
+		var start = moment(startDate);
+		var end = moment(endDate);
+		var label = startDate + ' - ' + endDate;
 
-			for(var i=0;i<name_a.length;i++){
-				var item = name_a[i];
-				var isnum = /^\d+$/.test(item);
-				if(isnum && item.length >= 6){
-					val_a += item;
-				}
-			}
-			for(var i=0;i<name_b.length;i++){
-				var item = name_b[i];
-				var isnum = /^\d+$/.test(item);
-				if(isnum && item.length >=6){
-					val_b += item;
-				}
-			}
-			if(order=="asc")
-				var res = ((parseInt(val_a) < parseInt(val_b)) ? -1 : ((parseInt(val_a) > parseInt(val_b)) ? 1 : 0));
-			else
-				var res = ((parseInt(val_a) < parseInt(val_b)) ? 1 : ((parseInt(val_a) > parseInt(val_b)) ? -1 : 0));
-			return res
-		}
-
-		function onRowSelect(row, isSelected){
-			if(isSelected){
-				$("#listSelected").show();
-				var selected = this.props.selected.slice();
-				var name = row["Test Name"].split("-");
-				name.shift();
-				name = name.join("-");
-				this.props.dispatch(selectedTest(name));
-			}
-			else{
-				var selected = this.props.selected.slice();
-				if(selected.length === 1){
-					$("#listSelected").hide();
-				}
-				var name = row["Test Name"].split("-");
-				name.shift();
-				name = name.join("-");
-				var index = selected.indexOf(name);
-				this.props.dispatch(cancelSelectedTest(index));
-			}
-		}
-
-		var selectRowProp = {
-		  mode: "checkbox",
-		  clickToSelect: "true",
-		  bgColor: "#f0ad4e",
-		  hideSelectColumn: "true",
-		  onSelect: onRowSelect.bind(this)
-		};
-
+        var content = rows.map(
+            (row) => {
+                return (
+                        <TxtRv result={row} />
+                );
+            }
+        );
 		return (
-				<div class="fixedTable">
-				<Button bsStyle="primary" id = "listSelected" onClick={this.list.bind(this)}>ListSelected</Button>
-				<BootstrapTable data={result_items} pagination={true} columnFilter={true} striped={true} hover={true} selectRow={selectRowProp}>
-					<TableHeaderColumn dataField="Link" width="80px">Link</TableHeaderColumn>
-					<TableHeaderColumn dataField="Test Name" isKey={true} dataSort={true} sortFunc={sortName} width="150px">Test Name</TableHeaderColumn>
-					<TableHeaderColumn dataField="ACP Build" width="100px" dataSort={true} sortFunc={sortBuild}>ACP Build</TableHeaderColumn>
-					<TableHeaderColumn dataField="RSTP Build" width="100px">RSTP Build</TableHeaderColumn>
-					<TableHeaderColumn dataField="Test Suit   (Passed/Total)" width="220px">Test Suit   (Passed/Total)</TableHeaderColumn>
-				</BootstrapTable>
-				</div>
-		       )
+		<div>
+		<div className="filterBar">
+			<div>
+			<input className="filter" type="text" id="search" placeholder="Type to search ACP Build" onKeyUp={this.onKeyUp.bind(this)}/>
+			<input className="ratio" type="text" placeholder="Ratio e.g. 0~1" onKeyUp={this.onKeyUpRatio.bind(this)} />
+			</div>
+			<div>
+			<DateRangePicker startDate={start} endDate={end} ranges={ranges} onApply={this.onApply.bind(this)}>
+				<Button className="selected-date-range-btn">
+					<div className="pull-left"><span className="glyphicon glyphicon-calendar" /></div>
+					<div className="pull-right">
+						<span>
+							{label}
+						</span>
+						<span className="caret"></span>
+					</div>
+				</Button>
+			</DateRangePicker>
+			</div>
+		</div>
+		<div className="TxtRVs">
+			{content}
+		</div>
+  		</div>
+		)
+
 	}
 }
 
+function formatDate(testName){
+		try{
+		if(testName.indexOf('jenkins') == -1 && testName.indexOf('results') == -1){
+			var date_arr = testName.split('-');
+			var year = date_arr[0].substring(0,4);
+			var month = date_arr[0].substring(4,6);
+			var day = date_arr[0].substring(6);
+			var hour = date_arr[1].substring(0,2);
+			var minute = date_arr[1].substring(2,4);
+			var second = date_arr[1].substring(4);
+			return [year, month, day].join('/') + " " + [hour, minute, second].join(':');
+		}
+		else if(testName.indexOf('jenkins') != -1){
+			var date_arr = testName.split('_');
+			var year = date_arr[2].split('-')[0];
+			var month = date_arr[2].split('-')[1];
+			var day = date_arr[2].split('-')[2];
+			var hour = date_arr[3].substring(0,2);
+			var minute = date_arr[3].substring(2,4);
+			return [year, month, day].join('/') + " " + [hour, minute].join(':');
+		}
+		else if(testName.indexOf('results') != -1){
+			var date_arr = testName.split('-');
+			var year = date_arr[1].substring(0,4);
+			var month = date_arr[1].substring(4,6);
+			var day = date_arr[1].substring(6);
+			var hour = date_arr[2].substring(0,2);
+			var minute = date_arr[2].substring(2,4);
+			var second = date_arr[2].substring(4);
+			return [year, month, day].join('/') + " " + [hour, minute, second].join(':');
+		}
+		else{
+			return "unknown";
+		}
+		}
+		catch(err){
+			return "unknown";
+		}
+}
+
+function sortByDate(a,b){
+	try{
+		var date_a = a[7].match(/\d/g);
+		date_a = date_a.join('');
+	}
+	catch(e){
+		var date_a = "00000000000000";
+	}
+	try{
+		var date_b = b[7].match(/\d/g);
+		date_b = date_b.join('');
+	}
+	catch(e){
+		var date_b = "00000000000000";
+	}
+	while(date_a.length <14){
+		date_a += '0';
+	}
+	while(date_b.length < 14){
+		date_b += '0';
+	}
+	return parseInt(date_b) - parseInt(date_a);
+}
+
+function filterByDate(rows, startDate, endDate){
+	try{
+		var start = startDate.match(/\d/g);
+		start = start.join('');
+		start = parseInt(start);
+	}
+	catch(e){
+		start = 0;
+	}
+	try{
+		var end = endDate.match(/\d/g);
+		end = end.join('');
+		end = parseInt(end);
+	}
+	catch(e){
+		end = 99999999;
+	}
+	var filtered_rows = rows.filter(
+		row => {
+			try{
+				var date = row[7].match(/\d/g);
+				date = date.join('');
+			}
+			catch(e){
+				var date = "00000000";
+			}
+			if(date.length > 8){
+				date = date.substring(0,8);
+			}
+			else{
+				while(date.length < 8){
+					date += '0';
+				}
+			}
+			date = parseInt(date);
+			if(date>=start && date<=end){
+				return true;
+			}
+			else{
+				return false;
+			}
+		}
+	);
+	return filtered_rows;
+}
+
+function filterByName(rows, name){
+	if(name == "" || name == undefined || name =="IP-"){
+		return rows;
+	}
+	var filtered_rows = rows.filter(
+		row => {
+			var ip = row[3];
+			if(ip.indexOf(name) != -1)
+				return true;
+			else
+				return false;
+		}
+	);
+	return filtered_rows;
+}
+
+function filterByRSTP(rows, build){
+	if(build == "" || build == undefined || build =="RSTP-"){
+		return rows;
+	}
+	var filtered_rows = rows.filter(
+		row => {
+			var RSTP = row[4];
+			if(RSTP.indexOf(build) != -1)
+				return true;
+			else
+				return false;
+		}
+	);
+	return filtered_rows;
+}
+
+function filterByTag(rows, tag){
+	if(tag == "" || tag == undefined){
+		return rows;
+	}
+	var filtered_rows = rows.filter(
+		row => {
+			var testSuit = row[5];
+			if(testSuit.indexOf(tag) != -1)
+				return true;
+			else
+				return false;
+		}
+	);
+	return filtered_rows;
+}
+
+function filterByRate(rows, ratio){
+	if(ratio == "" || ratio == undefined){
+		return rows;
+	}
+	if(ratio.indexOf('~') != -1){
+		var l = parseFloat(ratio.split('~')[0]);
+		var h = parseFloat(ratio.split('~')[1]);
+	}
+	else{
+		var l = 0;
+		var h = parseFloat(ratio);
+	}
+	var filtered_rows = rows.filter(
+		row => {
+			var ratio = row[0];
+			if(ratio >= l && ratio <= h)
+				return true;
+			else
+				return false;
+		}
+	);
+	return filtered_rows;
+}
+
+function createRows(result, filter, startDate, endDate, name, rstp, tag, ratio){
+		if(result === undefined){
+			result = [];
+		}
+		var rows = result.map(
+			(result) => {
+				var passRatio = result.value[6];
+				var passed = parseFloat(passRatio.split('/')[0]);
+				var total = parseFloat(passRatio.split('/')[1]);
+
+				var TestName = result.value[0];
+				var ACPBuild = result.value[2];
+				var ACPIP = result.value[3];
+				var RSTPBuild = result.value[4];
+				var testSuit = result.value[5];
+
+				var date = formatDate(TestName);
+				return [passed/total, TestName, ACPBuild, ACPIP, RSTPBuild, testSuit, passRatio, date];
+			}
+		);
+		rows = filterByDate(rows, startDate, endDate);
+		rows = filterByName(rows, name);
+		rows = filterByRSTP(rows, rstp);
+		rows = filterByTag(rows, tag);
+		rows = filterByRate(rows, ratio);
+		if(filter == "")
+			return rows.sort(sortByDate);
+		else{
+			var filtered_rows = rows.filter(
+				row => {
+					var ACPBuild = row[2];
+					if(ACPBuild.indexOf(filter) != -1)
+						return true;
+					return false;
+				}
+			);
+			return filtered_rows.sort(sortByDate);
+		}
+}
 
 function select(state) {
-    return state.loadTxtRv;
+    //return state.loadTxtRv;
+    var rows = state.loadTxtRv.items.rows;
+    var filter = state.loadTxtRv.filter;
+    var startDate = state.loadTxtRv.startDate;
+    var endDate = state.loadTxtRv.endDate;
+    var filterByName = state.loadTxtRv.filterByName;
+    var filterByRSTP = state.loadTxtRv.filterByRSTP;
+    var filterByTag = state.loadTxtRv.filterByTag;
+    var filterByRatio = state.loadTxtRv.filterByRatio;
+    return{
+    	rows: createRows(rows, filter, startDate, endDate, filterByName, filterByRSTP, filterByTag, filterByRatio),
+    	startDate: startDate,
+    	endDate: endDate,
+    	filterByName: filterByName,
+    	filterByRSTP: filterByRSTP,
+    	filterByTag: filterByTag,
+    	filterByRatio: filterByRatio
+    };
 }
 
 export default connect(select)(TxtResultList);

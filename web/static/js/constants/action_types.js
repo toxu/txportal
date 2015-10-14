@@ -12,8 +12,12 @@ export const TXT_RV_REQ = 'TXT_RV_REQ';
 export const TXT_RV_RECV = 'TXT_RV_RECV';
 export const TXT_RV_SELECT_ONE = 'TXT_RV_SELECT_ONE';
 export const TXT_RV_INVALIDATE = 'TXT_RV_INVALIDATE';
-export const TXT_SELECTED_TEST = 'TXT_SELECTED_TEST';
-export const TXT_CANCEL_SELECTED_TEST = 'TXT_CANCEL_SELECTED_TEST';
+export const TXT_SET_FILTER = 'TXT_SET_FILTER';
+export const TXT_SET_DATE = 'TXT_SET_DATE';
+export const TXT_Filter_BY_NAME = 'TXT_Filter_BY_NAME';
+export const TXT_Filter_BY_RSTP = 'TXT_Filter_BY_RSTP';
+export const TXT_Filter_BY_TAG = 'TXT_Filter_BY_TAG';
+export const TXT_Filter_BY_RATIO = 'TXT_Filter_BY_RATIO';
 
 // Txt worker page actions
 export const TXT_WORKER_TIMER = 'TXT_WORKER_TIMER';

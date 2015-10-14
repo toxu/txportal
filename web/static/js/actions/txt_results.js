@@ -4,9 +4,13 @@ import {
     TXT_RV_RECV,
     TXT_RV_SELECT_ONE,
     TXT_RV_INVALIDATE,
-    TXT_SELECTED_TEST,
 	TXT_WORKER_STATUS_RECV,
-    TXT_CANCEL_SELECTED_TEST
+    TXT_SET_FILTER,
+    TXT_SET_DATE,
+    TXT_Filter_BY_NAME,
+    TXT_Filter_BY_RSTP,
+    TXT_Filter_BY_TAG,
+    TXT_Filter_BY_RATIO
 } from '../constants/action_types';
 
 export function txtRvSelectOne(txtRv) {
@@ -62,16 +66,45 @@ export function fetchWorkerStatus() {
 	};
 }
 
-export function selectedTest(testName) {
+export function setFilter(filter) {
 	return {
-		type: TXT_SELECTED_TEST,
-		selected : testName
+		type: TXT_SET_FILTER,
+		filter: filter
 	};
 }
 
-export function cancelSelectedTest(index) {
+export function setDateInfo(startDate, endDate){
 	return {
-		type: TXT_CANCEL_SELECTED_TEST,
-		index : index
-	};
+		type: TXT_SET_DATE,
+		startDate: startDate,
+		endDate: endDate
+	}
+}
+
+export function filterByName(name){
+	return {
+		type: TXT_Filter_BY_NAME,
+		filterByName: name
+	}
+}
+
+export function filterByRSTP(build){
+	return {
+		type: TXT_Filter_BY_RSTP,
+		filterByRSTP: build
+	}
+}
+
+export function filterByTag(tag){
+	return {
+		type: TXT_Filter_BY_TAG,
+		filterByTag: tag
+	}
+}
+
+export function filterByRatio(ratio){
+	return {
+		type: TXT_Filter_BY_RATIO,
+		filterByRatio: ratio
+	}
 }
