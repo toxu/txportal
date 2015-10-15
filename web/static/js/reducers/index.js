@@ -153,7 +153,7 @@ function utter(state = {
 }
 
 function mainform(state = {
-    activePageId: 1
+    activePageId: 4
 }, action) {
     switch (action.type) {
     case MF_PAGE_SELECT:

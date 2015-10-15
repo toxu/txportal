@@ -14,7 +14,7 @@ function fetchNow() {
      };
 }
 
-function lostConnection() {
+function lostConnection(msg) {
     return {
         type: SCHEDULER_CONNECTIONLOST
     };
@@ -25,17 +25,22 @@ function updateMachineStatus(json) {
         type: SCHEDULER_UPDATESTATUS,
         receiveAt: Date.now(),
         machines: json
-    }
+    };
 }
 
-// TODO not to do cross domain fetch here
 export function fetchStatus() {
     return dispatch => {
         dispatch(fetchNow());
         return fetch(schedulerUrl + "/status", {method: "POST", body: ""})
-        // TODO handle exception !!!!!!!!!!!!!!!!!!!!!! Dispatch error message
         .then(response => response.json())
         .then(json => dispatch(updateMachineStatus(json)))
-        .catch(result => dispatch(lostConnection()));
+        .catch(result => dispatch(lostConnection(result)));
+    };
+}
+
+export function lockMachine(machineId, lock) {
+    return dispatch => {
+        return fetch(schedulerUrl + "/lockMachine", {method: "POST", body: JSON.stringify({setting: machineId, lock: lock})})
+        .catch(result => console.info("lockMachine failed: ", result));
     };
 }
