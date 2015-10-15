@@ -6,7 +6,7 @@ defmodule Txportal.UtterController do
 
   def projects(conn, _) do
     svr = :couchbeam.server_connection(@db_url, [])
-    {:ok, db} = :couchbeam.open_db(svr, "utter-projects", [])
+    {:ok, db} = :couchbeam.open_db(svr, "butter", [])
     {:ok, rv} = :couchbeam_view.all(db, [])
     jrv = rv |> Enum.map(&(getkey(&1)))
     json conn, jrv
@@ -14,8 +14,8 @@ defmodule Txportal.UtterController do
 
   def project_results(conn, %{"pname" => pname}) do
     svr = :couchbeam.server_connection(@db_url, [])
-    {:ok, db} = :couchbeam.open_db(svr, "utter-#{pname}", [])
-    {:ok, rv} = :couchbeam_view.fetch(db, {"utter", "target_commits"}, [{:limit, 20}, :descending])
+    {:ok, db} = :couchbeam.open_db(svr, "butter-#{pname}", [])
+    {:ok, rv} = :couchbeam_view.fetch(db, {"butter", "commits"}, [{:limit, 20}, :descending])
     jrv = rv |> Enum.map(&(convToMap(&1)))
     json conn, jrv
   end
