@@ -61,3 +61,15 @@
     width: 400px;
     max-width:400px;
 }
+
+.createJobForm.container {
+    width: 100%;
+}
+
+.invisibleLink {
+    color: transparent;
+}
+
+.invisibleLink:hover {
+    color: inherit;
+}
