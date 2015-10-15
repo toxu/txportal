@@ -6,8 +6,8 @@ import {
 } from '../constants/action_types';
 import fetch from 'isomorphic-fetch';
 
-var schedulerUrl = "http://10.50.104.13:23456";
-//var schedulerUrl = "/api/scheduler";
+//var schedulerUrl = "http://10.50.104.13:23456";
+var schedulerUrl = "/api/scheduler";
 
 function fetchNow() {
      return {
