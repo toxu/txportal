@@ -1,6 +1,6 @@
 import React, { Component, PropTypes } from 'react';
 import {connect} from 'react-redux';
-import { Tooltip, OverlayTrigger, Popover, ListGroup, ListGroupItem, Table, Well, Grid, ProgressBar, Row, Col, Panel } from 'react-bootstrap';
+import { Glyphicon, Tooltip, OverlayTrigger, Popover, ListGroup, ListGroupItem, Table, Well, Grid, ProgressBar, Row, Col, Panel } from 'react-bootstrap';
 import MachineJob from './machineJob.js';
 import '../../../css/common.css';
 
@@ -22,6 +22,18 @@ export default class Machine extends Component{
             return false;
         } else {
             return true;
+        }
+    }
+
+    getSubmitJobIcon(props) {
+        if (this.isWorkerAlive(props) && !props.status.lock) {
+            return (
+                <OverlayTrigger placement="bottom" overlay={<Tooltip id={`${props.machineId}-CreateNewJob`}>Create a new job</Tooltip>}>
+                    <span className="glyphicon glyphicon-play-circle" onClick={() => props.showCreateJobModal(props.machineId, true)}></span>
+                </OverlayTrigger>
+            );
+        } else {
+            return "";
         }
     }
 
@@ -58,6 +70,7 @@ export default class Machine extends Component{
                         </span>
                     </td>
                     <td className="headerCommand">
+                        {this.getSubmitJobIcon(props)}
                         {this.getMachineAccessibilityIcon(props)}
                         <OverlayTrigger trigger="click" rootClose placement="bottom" overlay={this.getInfoPopover(props)}>
                             <span className="glyphicon glyphicon-info-sign"></span>
@@ -70,7 +83,7 @@ export default class Machine extends Component{
 
     getInfoPopover(props) {
         return (
-        <Popover id={`machineDetails-${props.machineId}`} className="myPopover" title="Machine Details">
+        <Popover id={`machineDetails-${props.machineId}`} title="Machine Details">
             <table className="propTable">
                 <tbody>
                 {this.makeProp("Worker", <a href={props.status.workerUrl}>{props.status.worker}</a>)}

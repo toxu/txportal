@@ -1,7 +1,8 @@
 import {
     SCHEDULER_FETCH,
     SCHEDULER_UPDATESTATUS,
-    SCHEDULER_CONNECTIONLOST
+    SCHEDULER_CONNECTIONLOST,
+    SCHEDULER_SHOW_CREATE_JOB_MODAL
 } from '../constants/action_types';
 import fetch from 'isomorphic-fetch';
 
@@ -43,4 +44,20 @@ export function lockMachine(machineId, lock) {
         return fetch(schedulerUrl + "/lockMachine", {method: "POST", body: JSON.stringify({setting: machineId, lock: lock})})
         .catch(result => console.info("lockMachine failed: ", result));
     };
+}
+
+export function createJob(param) {
+    return dispatch => {
+        return fetch(schedulerUrl + "/submit_job", {method: "POST", body: JSON.stringify(param)})
+        .catch(result => console.info("lockMachine failed: ", result));
+    }
+
+}
+
+export function showCreateJobModal(machineId, show) {
+    return {
+        type: SCHEDULER_SHOW_CREATE_JOB_MODAL,
+        machineId: machineId,
+        show: show
+    }
 }

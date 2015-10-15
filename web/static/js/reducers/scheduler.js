@@ -2,7 +2,8 @@ import { combineReducers } from 'redux';
 import {
     SCHEDULER_FETCH,
     SCHEDULER_UPDATESTATUS,
-    SCHEDULER_CONNECTIONLOST
+    SCHEDULER_CONNECTIONLOST,
+    SCHEDULER_SHOW_CREATE_JOB_MODAL
 } from '../constants/action_types';
 
 var sampleMachineSettings = {
@@ -124,12 +125,21 @@ var sampleMachineSettings = {
 
 // TODO change the initial SETTING!!!!!
 export default function scheduler(state = {
+    createJobModal: {isVisible: false, machineId: "unknown"},
     isFetching: false,
     connectionLost: false,
     updateInterval: 2000,
     machines: {}
 }, action) {
     switch (action.type) {
+        case SCHEDULER_SHOW_CREATE_JOB_MODAL:
+            console.info("create job", action.machineId);
+            return Object.assign({}, state, {
+                createJobModal: {
+                    isVisible: action.show,
+                    machineId: action.machineId
+                }
+            });
         case SCHEDULER_FETCH:
             return Object.assign({}, state, {
                 isFetching: true

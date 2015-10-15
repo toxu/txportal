@@ -201,7 +201,7 @@ export default class MachineJob extends Component{
                         let resultUrl = resultUrlPrefix + timestamp;
                         message =
                             <span>{this.getResultIcon(isShowIcon)} Completed {testSuiteName} test on build {acpBuild}: <a
-                                    href={resultUrl}>{numSuccs}/{testSuiteNumOfCase}</a></span>;
+                                    href={resultUrl}>{numSuccs}/{testSuiteNumOfCase}</a> <a href={`${this.props.workerUrl}/result/${timestamp}`}><span className="invisibleLink glyphicon glyphicon-link"/></a></span>;
                     } else if (type === "clean") {
                         let isShowIcon = finished !== "aborted";
                         message = <span>{this.getResultIcon(isShowIcon)} Freed up disk space</span>;
