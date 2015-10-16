@@ -48,11 +48,8 @@ class Scheduler extends Component{
                             <Col md={6}>
                                 <Input type="number" ref="createJob_Retry" label="Retry" placeholder="0" />
                             </Col>
-                            <Col md={6}>
+                            <Col md={12}>
                                 <Input type="checkbox" ref="createJob_Publish" label="Publish" />
-                            </Col>
-                            <Col md={6}>
-                                <Input type="checkbox" ref="createJob_Email" label="Email Result" />
                             </Col>
                         </Grid>
                     </form>
@@ -71,7 +68,6 @@ class Scheduler extends Component{
                         setValue(param, "repeat", this.refs.createJob_Repeat.getValue());
                         setValue(param, "retry", this.refs.createJob_Retry.getValue());
                         setValue(param, "publish", this.refs.createJob_Publish.getChecked());
-                        setValue(param, "email", this.refs.createJob_Email.getChecked());
 
                         if (this.refs.createJob_Subset.getValue()) {
                             let list = this.refs.createJob_Subset.getValue().split(",").map((s) => s.trim());
