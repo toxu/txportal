@@ -1,6 +1,6 @@
 import React, { Component, PropTypes } from 'react';
 import {connect} from 'react-redux';
-import { Glyphicon, Tooltip, OverlayTrigger, Popover, ListGroup, ListGroupItem, Table, Well, Grid, ProgressBar, Row, Col, Panel } from 'react-bootstrap';
+import { Button, Input, Glyphicon, Tooltip, OverlayTrigger, Popover, ListGroup, ListGroupItem, Table, Well, Grid, ProgressBar, Row, Col, Panel } from 'react-bootstrap';
 import MachineJob from './machineJob.js';
 import '../../../css/common.css';
 
@@ -29,7 +29,7 @@ export default class Machine extends Component{
         if (this.isWorkerAlive(props) && !props.status.lock) {
             return (
                 <OverlayTrigger placement="bottom" overlay={<Tooltip id={`${props.machineId}-CreateNewJob`}>Create a new job</Tooltip>}>
-                    <span className="glyphicon glyphicon-play-circle" onClick={() => props.showCreateJobModal(props.machineId, true)}></span>
+                    <span className="machineActionIcon glyphicon glyphicon-play-circle" onClick={() => props.showCreateJobModal(props.machineId, true)}></span>
                 </OverlayTrigger>
             );
         } else {
@@ -37,25 +37,34 @@ export default class Machine extends Component{
         }
     }
 
+    getLockMachinePopover(props) {
+        return (
+            <Popover className="myPopover" title="Lock machine">
+                <Input type="text" label="Please state your name and the reason to lock" ref="lockMessage" placeholder="e.g. Mary: load test on this Tuesday"/>
+                <Button bsStyle="primary" onClick={() => props.onLockMachine(props.machineId, true, this.refs.lockMessage.getValue())}>Lock</Button>
+            </Popover>
+        );
+    }
+
     getMachineAccessibilityIcon(props) {
         console.info("props", props);
         if (!this.isWorkerAlive(props)) {
             return (
             <OverlayTrigger placement="bottom" overlay={<Tooltip id={`${props.machineId}-Accessibility`}>{`"${props.status.worker}`}" has no response</Tooltip>}>
-                <span className="glyphicon glyphicon-remove-circle"></span>
+                <span className="machineActionIcon glyphicon glyphicon-remove-circle"></span>
             </OverlayTrigger>
             );
         } else if (props.status.lock) {
             return (
-                <OverlayTrigger placement="bottom" overlay={<Tooltip id={`${props.machineId}-Accessibility`}>Locked. Click to unlock it</Tooltip>}>
-                    <span className="glyphicon glyphicon-ban-circle" onClick={props.onLockMachine.bind(null, props.machineId, false)}></span>
+                <OverlayTrigger placement="bottom" overlay={<Tooltip id={`${props.machineId}-Accessibility`}>{`Locked. "${props.status.lockMessage}" (Click to unlock it)`}</Tooltip>}>
+                    <span className="machineActionIcon glyphicon glyphicon-ban-circle" onClick={props.onLockMachine.bind(null, props.machineId, false, "")}></span>
                 </OverlayTrigger>
             );
         } else {
             return (
-            <OverlayTrigger placement="bottom" overlay={<Tooltip id={`${props.machineId}-Accessibility`}>Available. Click to lock it</Tooltip>}>
-                <span className="glyphicon glyphicon-ok-circle" onClick={props.onLockMachine.bind(null, props.machineId, true)}></span>
-            </OverlayTrigger>
+                <OverlayTrigger placement="bottom" trigger="click" rootClose overlay={this.getLockMachinePopover(props)}>
+                    <span className="machineActionIcon glyphicon glyphicon-ok-circle"></span>
+                </OverlayTrigger>
             );
         }
     }
@@ -65,7 +74,7 @@ export default class Machine extends Component{
             <table className="headerGroup">
                 <tr>
                     <td>
-                        <span className="headerLabel">
+                        <span className={this.isWorkerAlive(props)?"headerLabel":"headerLabel notAlive"}>
                             <a href={`http://${props.status.setting.ACP_management_IP}`}>ACP-{props.machineId}</a>
                         </span>
                     </td>
@@ -73,7 +82,7 @@ export default class Machine extends Component{
                         {this.getSubmitJobIcon(props)}
                         {this.getMachineAccessibilityIcon(props)}
                         <OverlayTrigger trigger="click" rootClose placement="bottom" overlay={this.getInfoPopover(props)}>
-                            <span className="glyphicon glyphicon-info-sign"></span>
+                            <span className="machineActionIcon glyphicon glyphicon-info-sign"></span>
                         </OverlayTrigger>
                     </td>
                 </tr>

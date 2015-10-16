@@ -39,9 +39,9 @@ export function fetchStatus() {
     };
 }
 
-export function lockMachine(machineId, lock) {
+export function lockMachine(machineId, lock, lockMessage) {
     return dispatch => {
-        return fetch(schedulerUrl + "/lockMachine", {method: "POST", body: JSON.stringify({setting: machineId, lock: lock})})
+        return fetch(schedulerUrl + "/lockMachine", {method: "POST", body: JSON.stringify({setting: machineId, lock: lock, lockMessage: lockMessage})})
         .catch(result => console.info("lockMachine failed: ", result));
     };
 }

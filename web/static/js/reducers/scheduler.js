@@ -15,6 +15,8 @@ var sampleMachineSettings = {
         },
         worker: "ChrisPC",
         workerUrl: "http://10.21.133.28:12345/",
+        lock: false,
+        lockMessage: "",
         status: {
             running: [
                 ["208", {

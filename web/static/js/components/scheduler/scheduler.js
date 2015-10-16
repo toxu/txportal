@@ -102,9 +102,9 @@ class Scheduler extends Component{
         clearInterval(this.timer);
     }
 
-    onLockMachine(machineId, lock) {
-        console.info("this", this, "machineId", machineId, "lock", lock);
-        this.props.lockMachine(machineId, lock);
+    onLockMachine(machineId, lock, lockMessage) {
+        console.info("this", this, "machineId", machineId, "lock", lock, "lockMessage", lockMessage);
+        this.props.lockMachine(machineId, lock, lockMessage);
     }
 
     render() {

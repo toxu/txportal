@@ -89,9 +89,13 @@ export default class MachineJob extends Component{
     render() {
         try {
             let content = (
-                <div>
-                    {`state=${this.props.state} info=${this.props.info}`}
-                </div>);
+                <Grid className="machineJobGroup">
+                    <Row>
+                        <Col md={12}>
+                        {`state=${this.props.state} info=${this.props.info}`}
+                        </Col>
+                    </Row>
+                </Grid>);
             switch (this.props.state) {
                 case "waiting":
                     // the info should be an object containing property
@@ -100,24 +104,26 @@ export default class MachineJob extends Component{
                     if (job == "run_test") {
                         const { suite, subset, tag } = this.props.info;
                         content = (
-                            <div>
-                                Run {suite} test
-                                {subset && subset.length > 0 ? ` (${subset.join(", ")})` : ""}
-                                {tag && tag.length > 0 ? ` with tag (${tag.join(", ")})` : ""}
-                            </div>
+                            <Grid className="machineJobGroup">
+                                <Row>
+                                    <Col md={12}>
+                                    Run {suite} test
+                                    {subset && subset.length > 0 ? ` (${subset.join(", ")})` : ""}
+                                    {tag && tag.length > 0 ? ` with tag (${tag.join(", ")})` : ""}
+                                    </Col>
+                                </Row>
+                            </Grid>
                         );
                     } else if (job == "upgrade") {
                         const { build } = this.props.info;
                         content = (
-                            <div>
-                                Upgrade ACP to build {build}
-                            </div>
-                        );
-                    } else if (job == "clean") {
-                        content = (
-                            <div>
-                                Free disk space
-                            </div>
+                            <Grid className="machineJobGroup">
+                                <Row>
+                                    <Col md={12}>
+                                    Upgrade ACP to build {build}
+                                    </Col>
+                                </Row>
+                            </Grid>
                         );
                     }
                     break;
@@ -128,8 +134,6 @@ export default class MachineJob extends Component{
                         type = "upgrade";
                     } else if (this.props.info.testSuiteName) {
                         type = "transcode";
-                    } else if (this.props.info.clean) {
-                        type = "clean";
                     }
                     let runContent = <div></div>;
                     if (type === "upgrade") {
@@ -157,13 +161,6 @@ export default class MachineJob extends Component{
                                 </Row>
                             </Grid>
                         );
-                    } else if (type === "clean") {
-                        // clean job
-                        runContent = (
-                            <div>
-                                Free up disk space
-                            </div>
-                        );
                     }
                     content = this.wrapWithOverlay(type, runContent);
                     break;
@@ -176,8 +173,6 @@ export default class MachineJob extends Component{
                         type = "upgrade";
                     } else if (this.props.info.testSuiteName) {
                         type = "transcode";
-                    } else if (this.props.info.clean) {
-                        type = "clean";
                     }
                     const { finished, result } = this.props.info;
                     let ago;
@@ -202,9 +197,6 @@ export default class MachineJob extends Component{
                         message =
                             <span>{this.getResultIcon(isShowIcon)} Completed {testSuiteName} test on build {acpBuild}: <a
                                     href={resultUrl}>{numSuccs}/{testSuiteNumOfCase}</a> <a href={`${this.props.workerUrl}/result/${timestamp}`}><span className="invisibleLink glyphicon glyphicon-link"/></a></span>;
-                    } else if (type === "clean") {
-                        let isShowIcon = finished !== "aborted";
-                        message = <span>{this.getResultIcon(isShowIcon)} Freed up disk space</span>;
                     } else {
                         message = <span>Unknown job</span>;
                     }

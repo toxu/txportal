@@ -25,6 +25,10 @@
     font-size: small;
 }
 
+.machinePanel .headerLabel.notAlive a {
+    color: #999999;
+}
+
 .machinePanel .headerLabel a {
     color: #333;
 }
@@ -72,4 +76,9 @@
 
 .invisibleLink:hover {
     color: inherit;
+}
+
+.machineActionIcon {
+    margin-left: 2px;
+    /*font-size: large;*/
 }
