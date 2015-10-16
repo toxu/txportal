@@ -1,6 +1,6 @@
 import React, { Component, PropTypes } from 'react';
 import {connect} from 'react-redux';
-import { Input, option, Button, Modal, Grid, ProgressBar, Row, Col, Panel, Alert } from 'react-bootstrap';
+import { Glyphicon, Input, option, Button, Modal, Grid, ProgressBar, Row, Col, Panel, Alert } from 'react-bootstrap';
 import Machine from './machine.js';
 import { fetchStatus, lockMachine, createJob, showCreateJobModal } from '../../actions/scheduler.js';
 import "../../../css/scheduler.css"
@@ -132,6 +132,9 @@ class Scheduler extends Component{
                                         />);
                             }
                         )}
+                        <div className="topmostRefreshButton">
+                            <Button onClick={this.props.fetchStatus}><Glyphicon glyph="repeat"/></Button>
+                        </div>
                     </div>
                     }
                 </div>
