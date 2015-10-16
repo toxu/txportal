@@ -57,5 +57,5 @@ export function strFromDuration(duration) {
 }
 
 export function dateToString(date) {
-    return date.toISOString().replace("T", " ").slice(0, -5);
+    return date.toLocaleDateString() + " " + date.toLocaleTimeString('en-US');
 }
