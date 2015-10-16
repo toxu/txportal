@@ -93,6 +93,7 @@ var sampleMachineSettings = {
                     "result": "success"
                 }],
                 ["208", {
+                    "publish": true,
                     "report_receivers": "trans",
                     "testSuiteName": "TS",
                     "startTime": 1444258673.61,

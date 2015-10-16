@@ -194,15 +194,21 @@ export default class MachineJob extends Component{
                         let isShowIcon = result === "success" && finished !== "aborted";
                         message = <span>{this.getResultIcon(isShowIcon)} Upgraded ACP to build {upgrade}</span>;
                     } else if (type === "transcode") {
-                        const { testSuiteName, acpBuild, testSuiteNumOfCase } = this.props.info;
+                        const { publish, testSuiteName, acpBuild, testSuiteNumOfCase } = this.props.info;
                         let { numSuccs } = this.props.info;
                         if (!numSuccs) {
                             numSuccs = 0;
                         }
                         let isShowIcon = finished !== "aborted" && numSuccs != 0;
                         let resultUrl = resultUrlPrefix + timestamp;
+                        let resultText;
+                        if (publish === undefined || publish === true) {
+                            resultText = <a href={resultUrl}>{numSuccs}/{testSuiteNumOfCase}</a>;
+                        } else {
+                            resultText = `${numSuccs}/${testSuiteNumOfCase}`;
+                        }
                         message =
-                            <span>{this.getResultIcon(isShowIcon)} Completed {testSuiteName} test on build {acpBuild}: <a href={resultUrl}>{numSuccs}/{testSuiteNumOfCase}</a> <a href={`${this.props.workerUrl}/result/${timestamp}`}><span className="invisibleLink glyphicon glyphicon-link"/></a></span>;
+                            <span>{this.getResultIcon(isShowIcon)} Completed {testSuiteName} test on build {acpBuild}: {resultText}</span>;
                     } else {
                         message = <span>Unknown job</span>;
                     }
