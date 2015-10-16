@@ -136,28 +136,34 @@ export default class MachineJob extends Component{
                         type = "transcode";
                     }
                     let runContent = <div></div>;
+                    const { testSuiteName, subset, tag, acpBuild, progress, timestamp } = this.props.info;
                     if (type === "upgrade") {
                         // upgrade job
                         runContent = (
                             <Grid className="machineJobGroup">
                                 <Row>
                                     <Col md={8}>Upgrading ACP to build {this.props.info.upgrade}</Col>
-                                    <Col md={4}><ProgressBar className="progressBar" active min={-20} now={100}/></Col>
+                                    <Col md={4}>
+                                        <a href={`${this.props.workerUrl}/result/${timestamp}`}>
+                                            <ProgressBar className="progressBar" active min={-20} now={100}/>
+                                        </a>
+                                    </Col>
                                 </Row>
                             </Grid>
                         );
                     } else if (type === "transcode") {
                         // run test
-                        const { testSuiteName, subset, tag, acpBuild, progress, timestamp } = this.props.info;
                         let [, done, total] = /(\d+)\/(\d+)/.exec(progress);
                         let percent = (100 * parseInt(done)) / parseInt(total);
                         runContent = (
                             <Grid className="machineJobGroup">
                                 <Row>
                                     <Col md={8}>Running {testSuiteName} test on build {acpBuild}</Col>
-                                    <Col md={4} className="endItem"><a href={`${this.props.workerUrl}/result/${timestamp}`}><ProgressBar className="progressBar" active
-                                                                                 label={progress} min={-20}
-                                                                                 now={percent}/></a></Col>
+                                    <Col md={4} className="endItem">
+                                        <a href={`${this.props.workerUrl}/result/${timestamp}`}>
+                                            <ProgressBar className="progressBar" active label={progress} min={-20} now={percent}/>
+                                        </a>
+                                    </Col>
                                 </Row>
                             </Grid>
                         );
@@ -182,12 +188,13 @@ export default class MachineJob extends Component{
                         ago = timeSince(new Date(finished)) + " ago";
                     }
                     let message = {};
+                    const { timestamp } = this.props.info;
                     if (type === "upgrade") {
-                        const { upgrade, timestamp } = this.props.info;
+                        const { upgrade } = this.props.info;
                         let isShowIcon = result === "success" && finished !== "aborted";
                         message = <span>{this.getResultIcon(isShowIcon)} Upgraded ACP to build {upgrade}</span>;
                     } else if (type === "transcode") {
-                        const { testSuiteName, acpBuild, timestamp, testSuiteNumOfCase } = this.props.info;
+                        const { testSuiteName, acpBuild, testSuiteNumOfCase } = this.props.info;
                         let { numSuccs } = this.props.info;
                         if (!numSuccs) {
                             numSuccs = 0;
@@ -195,15 +202,14 @@ export default class MachineJob extends Component{
                         let isShowIcon = finished !== "aborted" && numSuccs != 0;
                         let resultUrl = resultUrlPrefix + timestamp;
                         message =
-                            <span>{this.getResultIcon(isShowIcon)} Completed {testSuiteName} test on build {acpBuild}: <a
-                                    href={resultUrl}>{numSuccs}/{testSuiteNumOfCase}</a> <a href={`${this.props.workerUrl}/result/${timestamp}`}><span className="invisibleLink glyphicon glyphicon-link"/></a></span>;
+                            <span>{this.getResultIcon(isShowIcon)} Completed {testSuiteName} test on build {acpBuild}: <a href={resultUrl}>{numSuccs}/{testSuiteNumOfCase}</a> <a href={`${this.props.workerUrl}/result/${timestamp}`}><span className="invisibleLink glyphicon glyphicon-link"/></a></span>;
                     } else {
                         message = <span>Unknown job</span>;
                     }
                     let finishedContent = (
                         <Grid className="machineJobGroup">
                             <Row>
-                                <Col md={9}>{message}</Col>
+                                <Col md={9}>{message} <a href={`${this.props.workerUrl}/result/${timestamp}`}><span className="invisibleLink glyphicon glyphicon-link"/></a></Col>
                                 <Col md={3} className="endItem">{ago}</Col>
                             </Row>
                         </Grid>
