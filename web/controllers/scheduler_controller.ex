@@ -2,17 +2,17 @@ require Logger
 defmodule Txportal.SchedulerController do
   use Txportal.Web, :controller
 
-  @scheduler_status_url "http://10.50.104.13:23456/status"
+  @scheduler_status_url "http://10.50.104.13:23456/"
 
-  def status(conn, _) do
+  def redirect(conn, param) do
+    {:ok, data, _conn_details} = Plug.Conn.read_body(conn)
+    action = param["action"]
     HTTPoison.start
-    rv = HTTPoison.post(@scheduler_status_url, "")
+    rv = HTTPoison.post(@scheduler_status_url <> action, data)
     rv_json = case rv do
              {:ok, resp} -> resp.body
              _ -> %{"Error" => "Failed to connect to worker"}
            end
-    Logger.debug rv_json       
-
     text conn, rv_json
   end
 

@@ -45,18 +45,18 @@ class TxtRv extends React.Component{
         var tileStatus = 'tile-status';
         var iconStatus = 'icon-status';
 
-        if (result[0] <= 0.25) {
+        if (result[0] <= 0.5) {
             tileStatus += ' errored';
             iconStatus += ' errored';
         }
-        else if(result[0] <= 0.5 && result[0] > 0.25){
+        else if(result[0] <= 0.8 && result[0] > 0.5){
             tileStatus += ' prepare';
             iconStatus += ' prepare';
         }
-        else if(result[0] <= 0.75 && result[0] > 0.5){
-            tileStatus += ' aware';
-            iconStatus += ' aware';
-        }
+//        else if(result[0] <= 0.75 && result[0] > 0.5){
+//            tileStatus += ' aware';
+//            iconStatus += ' aware';
+//        }
         else {
             tileStatus += ' passed';
             iconStatus += ' passed';
@@ -65,7 +65,7 @@ class TxtRv extends React.Component{
         const ratioBar = (
             <bs.ProgressBar>
                 <bs.ProgressBar className="progress-bar progress-bar-success" now={Math.round(result[0]*100)} label="%(percent)s%" ></bs.ProgressBar>
-                <bs.ProgressBar className="progress-bar progress-bar-danger" now={Math.round((1-result[0])*100)} label="%(percent)s%"></bs.ProgressBar>
+                <bs.ProgressBar className="progress-bar progress-bar-danger" now={100 - Math.round(result[0]*100)} label="%(percent)s%"></bs.ProgressBar>
             </bs.ProgressBar>
         );
 

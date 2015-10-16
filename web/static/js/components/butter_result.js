@@ -1,8 +1,8 @@
 import React from 'react';
-import '../../css/utter.css';
+import '../../css/butter.css';
 import * as bs from 'react-bootstrap';
 
-class UtterRv extends React.Component{
+class ButterRv extends React.Component{
     constructor(props) {
         super(props);
         this.state = {
@@ -29,7 +29,7 @@ class UtterRv extends React.Component{
         const { content, key } = this.props;
         var tileStatus = 'tile-status';
         var iconStatus = 'icon-status';
-        if (content.value.error != undefined && content.value.error != "") {
+        if (content.value.result.error != undefined && content.value.result.error != "") {
             tileStatus += ' errored';
             iconStatus += ' errored';
         } else {
@@ -37,23 +37,23 @@ class UtterRv extends React.Component{
             iconStatus += ' passed';
         }
 
-        var author = content.value["target-commit"].author;
+        var author = content.value["commit"].author;
         var svnLink = "http://hsvn/viewvc/repo?view=revision&revision=" + content.key;
         var authorLink = "http://jira/secure/ViewProfile.jspa?name=" + author;
 
         var id = 0;
         var gtest_keys = <div/>;
         var gtest_body = <div/>;
-        if (content.value.gtest != undefined && content.value.gtest.log != undefined){
-            gtest_keys = Object.keys(content.value.gtest.log);
+        if (content.value.result != undefined && content.value.result.gtest != undefined){
+            gtest_keys = Object.keys(content.value.result.gtest);
             var gtest_table_body = gtest_keys.map(
                 (k) => {
-                    if (content.value.gtest.log[k].errors > 0 || content.value.gtest.log[k].failures > 0)
+                    if (content.value.result.gtest[k].errors > 0 || content.value.result.gtest[k].failures > 0)
                         return(
                         <tr>
                         <td>{k}</td>
-                        <td>{content.value.gtest.log[k].errors}/{content.value.gtest.log[k].tests}</td>
-                        <td>{content.value.gtest.log[k].failures}/{content.value.gtest.log[k].tests}</td>
+                        <td>{content.value.result.gtest[k].errors}/{content.value.result.gtest[k].tests}</td>
+                        <td>{content.value.result.gtest[k].failures}/{content.value.result.gtest[k].tests}</td>
                         </tr>);
                     else
                         return 0;
@@ -75,15 +75,15 @@ class UtterRv extends React.Component{
                 </bs.Table>;
         }
 
-        var titleOverlay = <bs.Tooltip>{content.value["target-commit"].msg}</bs.Tooltip>;
+        var titleOverlay = <bs.Tooltip>{content.value["commit"].msg}</bs.Tooltip>;
         return (
-           <div className="utter-result-item" key= {key}>
+           <div className="butter-result-item" key= {key}>
                 <div className={tileStatus}>
                 <span className={iconStatus} title="passed"/>
                 </div>
                 <div className="tile-main">
                 <bs.OverlayTrigger trigger="hover" overlay={titleOverlay}>
-                <h2><a className="tile-commit-message" href={svnLink} target="_blank">{content.value["target-commit"].msg}</a></h2>
+                <h2><a className="tile-commit-message" href={svnLink} target="_blank">{content.value["commit"].msg}</a></h2>
                 </bs.OverlayTrigger>
                 <div className="tile-author">
                 <a href={authorLink} target="_blank">{author}</a> commited
@@ -91,7 +91,7 @@ class UtterRv extends React.Component{
                 </div>
                 <div className="tile-additional">
                 <div>rev: <a className="tile-commit-message" href={svnLink} target="_blank">{content.key}</a></div>
-                <div>gtest <a href="#" onClick={this.open.bind(this)}>detail</a></div>
+                <div>error: {content.value.result.error} <a href="#" onClick={this.open.bind(this)}>(detail)</a></div>
                 </div>
 
                 <bs.Modal show={this.state.showModal} onHide={this.close.bind(this)}>
@@ -108,4 +108,4 @@ class UtterRv extends React.Component{
     }
 }
 
-export default UtterRv;
+export default ButterRv;

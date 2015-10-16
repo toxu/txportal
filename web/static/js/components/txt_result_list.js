@@ -62,6 +62,14 @@ class TxtResultList extends React.Component{
 		else{
 			$(".RSTP").css("background-color", "white");
 		}
+		if(filterByTag != ''){
+			$(".SDI").css({"border-right-width":"20px", "border-right-color":"yellow", "border-right-style":"solid"});
+			$(".TS").css({"border-right-width":"20px", "border-right-color":"yellow", "border-right-style":"solid"});
+		}
+		else{
+			$(".SDI").css({"border-right-width":"0px", "border-right-color":"yellow", "border-right-style":"solid"});
+			$(".TS").css({"border-right-width":"00px", "border-right-color":"yellow", "border-right-style":"solid"});
+		}
 
 		var start = moment(startDate);
 		var end = moment(endDate);
@@ -75,29 +83,29 @@ class TxtResultList extends React.Component{
             }
         );
 		return (
-		<div>
-		<div className="filterBar">
-			<div>
+		<div className="TXT_results">
+		<Row>
 			<input className="filter" type="text" id="search" placeholder="Type to search ACP Build" onKeyUp={this.onKeyUp.bind(this)}/>
 			<input className="ratio" type="text" placeholder="Ratio e.g. 0~1" onKeyUp={this.onKeyUpRatio.bind(this)} />
+			<Col md = {2}>
+				<DateRangePicker startDate={start} endDate={end} ranges={ranges} onApply={this.onApply.bind(this)}>
+					<Button className="selected-date-range-btn">
+						<div className="pull-left"><span className="glyphicon glyphicon-calendar" /></div>
+						<div className="pull-right">
+							<span>
+								{label}
+							</span>
+							<span className="caret"></span>
+						</div>
+					</Button>
+				</DateRangePicker>
+			</Col>
+		</Row>
+		<Row>
+			<div className="TxtRVs">
+				{content}
 			</div>
-			<div>
-			<DateRangePicker startDate={start} endDate={end} ranges={ranges} onApply={this.onApply.bind(this)}>
-				<Button className="selected-date-range-btn">
-					<div className="pull-left"><span className="glyphicon glyphicon-calendar" /></div>
-					<div className="pull-right">
-						<span>
-							{label}
-						</span>
-						<span className="caret"></span>
-					</div>
-				</Button>
-			</DateRangePicker>
-			</div>
-		</div>
-		<div className="TxtRVs">
-			{content}
-		</div>
+		</Row>
   		</div>
 		)
 

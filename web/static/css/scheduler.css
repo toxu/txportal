@@ -10,8 +10,18 @@
     flex-wrap: wrap;
 }
 
+.topmostRefreshButton {
+    position: absolute;
+    bottom: 10px;
+    right: 10px;
+}
+
+.topmostRefreshButton .glyphicon {
+    font-size: x-large;
+}
+
 .machinePanel {
-    min-width: 500px;
+    min-width: 450px;
     width: 48%;
     display: inline-block;
     margin: 1%;
@@ -23,6 +33,14 @@
 
 .machinePanel .headerLabel {
     font-size: small;
+}
+
+.machinePanel .headerLabel.notAlive a {
+    color: #999999;
+}
+
+.machinePanel .headerLabel a {
+    color: #333;
 }
 
 .machinePanel .headerCommand {
@@ -40,4 +58,37 @@
 
 .machineJobGroup.container .progressBar {
     margin-bottom: 0;
+}
+
+.propPanel.container {
+    width: 100%;
+}
+
+.propPanel.container .key{
+    font-weight: bold;
+}
+
+.propPanel.container .value{
+}
+
+.myPopover.popover {
+    width: 400px;
+    max-width:400px;
+}
+
+.createJobForm.container {
+    width: 100%;
+}
+
+.invisibleLink {
+    color: transparent;
+}
+
+.invisibleLink:hover {
+    color: inherit;
+}
+
+.machineActionIcon {
+    margin-left: 2px;
+    /*font-size: large;*/
 }

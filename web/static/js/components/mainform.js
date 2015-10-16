@@ -9,7 +9,7 @@ import NavDropdown from 'react-bootstrap/lib/NavDropdown';
 import Nav from 'react-bootstrap/lib/Nav';
 import MenuItem from 'react-bootstrap/lib/MenuItem';
 import TxtResultList from "./txt_result_list";
-import Utter from "./utter";
+import Butter from "./butter";
 import Worker from './worker';
 import Scheduler from "./scheduler/scheduler.js";
 
@@ -35,7 +35,7 @@ class MainForm extends React.Component{
             content = <TxtResultList/>;
             break;
         case 2:
-            content = <Utter/>;
+            content = <Butter/>;
             break;
         case 3:
             content = <Worker/>;
@@ -57,7 +57,7 @@ class MainForm extends React.Component{
                     <MenuItem eventKey="1.3" href="javascript:void(0);" onSelect={this.handleSelect.bind(this, 3)}>Workers</MenuItem>
                     <MenuItem eventKey="1.4" href="javascript:void(0);" onSelect={this.handleSelect.bind(this, 4)}>Scheduler</MenuItem>
 		</NavDropdown>
-		<NavDropdown eventKey={2} title="Utter" id="utter-dropdown">
+		<NavDropdown eventKey={2} title="Butter" id="butter-dropdown">
                     <MenuItem eventKey="2.1" href="javascript:void(0);" onSelect={this.handleSelect.bind(this, 2)}>Results</MenuItem>
                     <MenuItem eventKey="2.2">Workers</MenuItem>
 		</NavDropdown>

@@ -2,17 +2,21 @@ import { combineReducers } from 'redux';
 import {
     SCHEDULER_FETCH,
     SCHEDULER_UPDATESTATUS,
-    SCHEDULER_CONNECTIONLOST
+    SCHEDULER_CONNECTIONLOST,
+    SCHEDULER_SHOW_CREATE_JOB_MODAL
 } from '../constants/action_types';
 
 var sampleMachineSettings = {
     208: {
         setting: {
+            "ACP_management_IP": "172.31.1.207",
             "streamer": "10.51.100.61",
             supported_test_types: ["TS","StatMux"]
         },
         worker: "ChrisPC",
         workerUrl: "http://10.21.133.28:12345/",
+        lock: false,
+        lockMessage: "",
         status: {
             running: [
                 ["208", {
@@ -31,12 +35,21 @@ var sampleMachineSettings = {
                     "ID": 71707,
                     "txtBuild": "newTXT",
                     "txtBuildUrl": "\\\\10.50.100.188\\Users\\ctsang\\Documents\\projects\\ACP_StandaloneTxTest-trunk\\ACP_StandaloneTxTest\\txt\\output\\results\\20151008-123703",
-                    "startTime": 1444279026.724,
+                    "startTime": 1444479026.724,
                     "timestamp": "20151008-123703",
                     "progress": "100/124",
                     "transcodePackBuild": "1.15.0.0.181",
                     "testSuiteNumOfCase": 124,
                     "ACP_management_IP": "172.31.1.208"
+                }],
+                ["208", {
+                    "timestamp": "20151013-200531",
+                    "upgrade": "1.2.x.0",
+                    "ID": 40011,
+                    "progress": [
+                        "ls / ",
+                        "..."
+                    ]
                 }]
             ],
             waiting: [
@@ -80,6 +93,7 @@ var sampleMachineSettings = {
                     "result": "success"
                 }],
                 ["208", {
+                    "publish": true,
                     "report_receivers": "trans",
                     "testSuiteName": "TS",
                     "startTime": 1444258673.61,
@@ -114,12 +128,21 @@ var sampleMachineSettings = {
 
 // TODO change the initial SETTING!!!!!
 export default function scheduler(state = {
+    createJobModal: {isVisible: false, machineId: "unknown"},
     isFetching: false,
     connectionLost: false,
-    updateInterval: 500000000,
+    updateInterval: 2000,
     machines: {}
 }, action) {
     switch (action.type) {
+        case SCHEDULER_SHOW_CREATE_JOB_MODAL:
+            console.info("create job", action.machineId);
+            return Object.assign({}, state, {
+                createJobModal: {
+                    isVisible: action.show,
+                    machineId: action.machineId
+                }
+            });
         case SCHEDULER_FETCH:
             return Object.assign({}, state, {
                 isFetching: true
