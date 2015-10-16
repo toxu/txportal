@@ -107,6 +107,17 @@ export default class MachineJob extends Component{
         }
     }
 
+    isResultOkay(info) {
+        let { result, finished, numSuccs } = info;
+        if (result !== undefined && result !== "success")
+            return false;
+        if (finished !== undefined && finished === "aborted")
+            return false;
+        if (numSuccs !== undefined && numSuccs === 0)
+            return false;
+        return true;
+    }
+
     render() {
         try {
             let content = (
@@ -211,15 +222,13 @@ export default class MachineJob extends Component{
                     const { timestamp } = this.props.info;
                     if (type === "upgrade") {
                         const { upgrade } = this.props.info;
-                        let isShowIcon = result === "success" && finished !== "aborted";
-                        message = <span>{this.getResultIcon(isShowIcon)} Upgraded ACP to build {upgrade}</span>;
+                        message = <span>{this.getResultIcon(this.isResultOkay(this.props.info))} Upgraded ACP to build {upgrade}</span>;
                     } else if (type === "transcode") {
                         const { publish, testSuiteName, acpBuild, testSuiteNumOfCase } = this.props.info;
                         let { numSuccs } = this.props.info;
                         if (!numSuccs) {
                             numSuccs = 0;
                         }
-                        let isShowIcon = finished !== "aborted" && numSuccs != 0;
                         let resultUrl = resultUrlPrefix + timestamp;
                         let resultText;
                         if (publish === undefined || publish === true) {
@@ -228,7 +237,7 @@ export default class MachineJob extends Component{
                             resultText = `${numSuccs}/${testSuiteNumOfCase}`;
                         }
                         message =
-                            <span>{this.getResultIcon(isShowIcon)} Completed {testSuiteName} test on build {acpBuild}: {resultText}</span>;
+                            <span>{this.getResultIcon(this.isResultOkay(this.props.info))} Completed {testSuiteName} test on build {acpBuild}: {resultText}</span>;
                     } else {
                         message = <span>Unknown job</span>;
                     }
