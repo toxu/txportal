@@ -1,5 +1,5 @@
 require Logger
-defmodule Txportal.UtterController do
+defmodule Txportal.ButterController do
   use Txportal.Web, :controller
 
   @db_url "http://10.50.100.213:5984"

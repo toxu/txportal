@@ -1,24 +1,24 @@
 import React from 'react';
 import {connect} from 'react-redux';
-import { fetchUtterResults, fetchUtterProjects, utterTabSelected } from '../actions/utter';
+import { fetchButterResults, fetchButterProjects, butterTabSelected } from '../actions/butter';
 
 // UI
 import Tabs from 'react-bootstrap/lib/Tabs';
 import Tab from 'react-bootstrap/lib/Tab';
-import UtterResultList from './utter_result_list';
+import ButterResultList from './butter_result_list';
 
-class Utter extends React.Component{
+class Butter extends React.Component{
     constructor(props) {
         super(props);
     }
 
     componentDidMount() {
         const { dispatch, projsource } = this.props;
-        dispatch(fetchUtterProjects(projsource));
+        dispatch(fetchButterProjects(projsource));
     }
 
     handleSelect(key) {
-        this.props.dispatch(utterTabSelected(key));
+        this.props.dispatch(butterTabSelected(key));
     }
 
     render() {
@@ -32,7 +32,7 @@ class Utter extends React.Component{
                     return <Tab eventKey={key} title={proj}></Tab>
                 }
                 else {
-                    return <Tab eventKey={key} title={proj}> <UtterResultList rvlist={results[key-1]}/> </Tab>
+                    return <Tab eventKey={key} title={proj}> <ButterResultList rvlist={results[key-1]}/> </Tab>
                 }
             }
         );
@@ -40,11 +40,11 @@ class Utter extends React.Component{
         key = activeProjectId-1;
         if (projects[key] != undefined
             && (results[key] == undefined || results[key].length == 0)) {
-            dispatch(fetchUtterResults(key, projects[key]));
+            dispatch(fetchButterResults(key, projects[key]));
         }
 
         return (
-	<div className="utter-result-main">
+	<div className="butter-result-main">
             <Tabs activeKey={activeProjectId} onSelect={this.handleSelect.bind(this)}>
                 {tabs}
             </Tabs>
@@ -54,7 +54,7 @@ class Utter extends React.Component{
 }
 
 function select(state) {
-    return state.utter;
+    return state.butter;
 }
 
-export default connect(select)(Utter);
+export default connect(select)(Butter);

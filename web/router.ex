@@ -21,10 +21,10 @@ defmodule Txportal.Router do
     get "/txt/status", TxtWorkerController, :status
     post "/scheduler/:action", SchedulerController, :redirect
 
-    get "/utter/projects", UtterController, :projects
-    get "/utter/projects/:pname", UtterController, :project_results
-    get "/utter/start", UtterController, :start_service
-    get "/utter/stop", UtterController, :stop_service
+    get "/butter/projects", ButterController, :projects
+    get "/butter/projects/:pname", ButterController, :project_results
+    get "/butter/start", ButterController, :start_service
+    get "/butter/stop", ButterController, :stop_service
 
     get "/couchpotato/:db/design/:design/view/:view", PotatoController, :view_results
     get "/couchpotato/:db/design/:design/view/:view/key/:key", PotatoController, :key_results
