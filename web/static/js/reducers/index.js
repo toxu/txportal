@@ -90,7 +90,7 @@ function loadTxtRv(state = {
 			endDate: action.endDate
 		});
 	case TXT_Filter_BY_NAME:
-		if(action.filterByName == 'IP-')
+		if(action.filterByName == 'IP-' || action.filterByName == state.filterByName)
 			var name = "";
 		else
 			var name = action.filterByName;
@@ -98,7 +98,7 @@ function loadTxtRv(state = {
 			filterByName: name
 		});
 	case TXT_Filter_BY_RSTP:
-		if(action.filterByRSTP == 'TXP-')
+		if(action.filterByRSTP == 'TXP-' || action.filterByRSTP == state.filterByRSTP)
 			var rstp = "";
 		else
 			var rstp = action.filterByRSTP;

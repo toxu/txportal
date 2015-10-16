@@ -8,6 +8,11 @@
     font-size: x-large;
 }
 
+.TXT_results {
+	margin-left:10%;
+	max-width:980px;
+}
+
 .labels{
     font-size: 12px;
     margin-left: 2%;
@@ -26,6 +31,11 @@
 .RSTP{
     margin-left:8%;
     cursor: pointer;
+}
+
+.row .col-md-2 {
+	padding-left: 0px;
+	float: left;
 }
 
 .filter{
@@ -51,12 +61,6 @@
     width: 220px;
     height: 34px;
 }
-
-.opensright{
-    left: 501px !important;
-}
-
-
 
 .txt-result-item {
 	background-color: rgb(250, 250, 248);
@@ -267,16 +271,17 @@
 }
 
 .ACPBuild {
-    min-width: 150px;
+    min-width: 200px;
     float: left;
+    font-size: 16px;
 }
 
 .txt-result-item .TS {
-    background-color: #4FCE0F;
+    background-color: rgb(102,102,102);
     cursor: pointer;
-}
+    }
 
 .txt-result-item .SDI {
-    background-color: rgb(24,199,183);
-    cursor: pointer
-}
+    background-color: rgb(128,128,128);
+    cursor: pointer;
+   }
