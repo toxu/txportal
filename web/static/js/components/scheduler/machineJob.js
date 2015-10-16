@@ -42,7 +42,17 @@ export default class MachineJob extends Component{
                 properties.push(["Duration:", strFromDuration(new Date(finished) - startDate)]);
             } else {
                 if (state == "running") {
-                    properties.push(["Duration:", strFromDuration(new Date() - startDate)]);
+                    let duration = new Date() - startDate;
+                    if (progress) {
+                        let percent = this.progressToPercent(progress);
+                        let remainingPercent = 100 - percent;
+                        let remainingTime = "\u221E";
+                        if (percent) {
+                            remainingTime = strFromDuration(remainingPercent * duration / percent);
+                        }
+                        properties.push(["Remaining time:", remainingTime]);
+                    }
+                    properties.push(["Duration:", strFromDuration(duration)]);
                 }
             }
         }
@@ -86,6 +96,17 @@ export default class MachineJob extends Component{
         }
     }
 
+    progressToPercent(progress) {
+        try {
+            let [, done, total] = /(\d+)\/(\d+)/.exec(progress);
+            let percent = (100 * parseInt(done)) / parseInt(total);
+            return percent;
+        } catch (e) {
+            console.info("Error occurred: ", e.stack);
+            return 0;
+        }
+    }
+
     render() {
         try {
             let content = (
@@ -107,7 +128,7 @@ export default class MachineJob extends Component{
                             <Grid className="machineJobGroup">
                                 <Row>
                                     <Col md={12}>
-                                    Run {suite} test
+                                    Pending to run {suite} test
                                     {subset && subset.length > 0 ? ` (${subset.join(", ")})` : ""}
                                     {tag && tag.length > 0 ? ` with tag (${tag.join(", ")})` : ""}
                                     </Col>
@@ -120,7 +141,7 @@ export default class MachineJob extends Component{
                             <Grid className="machineJobGroup">
                                 <Row>
                                     <Col md={12}>
-                                    Upgrade ACP to build {build}
+                                    Pending to upgrade ACP to build {build}
                                     </Col>
                                 </Row>
                             </Grid>
@@ -153,8 +174,7 @@ export default class MachineJob extends Component{
                         );
                     } else if (type === "transcode") {
                         // run test
-                        let [, done, total] = /(\d+)\/(\d+)/.exec(progress);
-                        let percent = (100 * parseInt(done)) / parseInt(total);
+                        let percent = this.progressToPercent(progress);
                         runContent = (
                             <Grid className="machineJobGroup">
                                 <Row>
