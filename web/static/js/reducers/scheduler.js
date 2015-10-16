@@ -15,6 +15,8 @@ var sampleMachineSettings = {
         },
         worker: "ChrisPC",
         workerUrl: "http://10.21.133.28:12345/",
+        lock: false,
+        lockMessage: "",
         status: {
             running: [
                 ["208", {
@@ -91,6 +93,7 @@ var sampleMachineSettings = {
                     "result": "success"
                 }],
                 ["208", {
+                    "publish": true,
                     "report_receivers": "trans",
                     "testSuiteName": "TS",
                     "startTime": 1444258673.61,

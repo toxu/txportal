@@ -1,6 +1,6 @@
 import React, { Component, PropTypes } from 'react';
 import {connect} from 'react-redux';
-import { Input, option, Button, Modal, Grid, ProgressBar, Row, Col, Panel, Alert } from 'react-bootstrap';
+import { Glyphicon, Input, option, Button, Modal, Grid, ProgressBar, Row, Col, Panel, Alert } from 'react-bootstrap';
 import Machine from './machine.js';
 import { fetchStatus, lockMachine, createJob, showCreateJobModal } from '../../actions/scheduler.js';
 import "../../../css/scheduler.css"
@@ -48,11 +48,8 @@ class Scheduler extends Component{
                             <Col md={6}>
                                 <Input type="number" ref="createJob_Retry" label="Retry" placeholder="0" />
                             </Col>
-                            <Col md={6}>
+                            <Col md={12}>
                                 <Input type="checkbox" ref="createJob_Publish" label="Publish" />
-                            </Col>
-                            <Col md={6}>
-                                <Input type="checkbox" ref="createJob_Email" label="Email Result" />
                             </Col>
                         </Grid>
                     </form>
@@ -71,7 +68,6 @@ class Scheduler extends Component{
                         setValue(param, "repeat", this.refs.createJob_Repeat.getValue());
                         setValue(param, "retry", this.refs.createJob_Retry.getValue());
                         setValue(param, "publish", this.refs.createJob_Publish.getChecked());
-                        setValue(param, "email", this.refs.createJob_Email.getChecked());
 
                         if (this.refs.createJob_Subset.getValue()) {
                             let list = this.refs.createJob_Subset.getValue().split(",").map((s) => s.trim());
@@ -102,9 +98,9 @@ class Scheduler extends Component{
         clearInterval(this.timer);
     }
 
-    onLockMachine(machineId, lock) {
-        console.info("this", this, "machineId", machineId, "lock", lock);
-        this.props.lockMachine(machineId, lock);
+    onLockMachine(machineId, lock, lockMessage) {
+        console.info("this", this, "machineId", machineId, "lock", lock, "lockMessage", lockMessage);
+        this.props.lockMachine(machineId, lock, lockMessage);
     }
 
     render() {
@@ -136,6 +132,9 @@ class Scheduler extends Component{
                                         />);
                             }
                         )}
+                        <div className="topmostRefreshButton">
+                            <Button onClick={this.props.fetchStatus}><Glyphicon glyph="repeat"/></Button>
+                        </div>
                     </div>
                     }
                 </div>
