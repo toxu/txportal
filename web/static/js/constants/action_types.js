@@ -1,11 +1,11 @@
 // Mainform actions
 export const MF_PAGE_SELECT = 'MF_PAGE_SELECT';
 
-// Utter actions
-export const UTTER_TAB_SELECT = 'UTTER_TAB_SELECT';
-export const UTTER_GET_PROJECTS_START = 'UTTER_GET_PROJECTS_START';
-export const UTTER_PROJECTS_RECV = 'UTTER_PROJECTS_RECV';
-export const UTTER_RESULTS_RECV = 'UTTER_RESULTS_RECV';
+// Butter actions
+export const BUTTER_TAB_SELECT = 'BUTTER_TAB_SELECT';
+export const BUTTER_GET_PROJECTS_START = 'BUTTER_GET_PROJECTS_START';
+export const BUTTER_PROJECTS_RECV = 'BUTTER_PROJECTS_RECV';
+export const BUTTER_RESULTS_RECV = 'BUTTER_RESULTS_RECV';
 
 // Txt result page actions
 export const TXT_RV_REQ = 'TXT_RV_REQ';

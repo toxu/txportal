@@ -1,7 +1,7 @@
 import React from 'react';
-import UtterRv from './utter_result';
+import ButterRv from './butter_result';
 
-class UtterResultList extends React.Component{
+class ButterResultList extends React.Component{
     constructor(props) {
         super(props);
     }
@@ -16,16 +16,16 @@ class UtterResultList extends React.Component{
             (rv) => {
                 key++;
                 return (
-                        <UtterRv key={key} content={rv} />
+                        <ButterRv key={key} content={rv} />
                 );
             }
         );
         return (
-                <div className="utter-result-list">
+                <div className="butter-result-list">
                 {urvs}
                 </div>
         );
     }
 }
 
-export default UtterResultList;
+export default ButterResultList;

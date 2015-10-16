@@ -2,10 +2,10 @@ import { combineReducers } from 'redux';
 import {
     MF_PAGE_SELECT,
 
-    UTTER_TAB_SELECT,
-    UTTER_GET_PROJECTS_START,
-    UTTER_PROJECTS_RECV,
-    UTTER_RESULTS_RECV,
+    BUTTER_TAB_SELECT,
+    BUTTER_GET_PROJECTS_START,
+    BUTTER_PROJECTS_RECV,
+    BUTTER_RESULTS_RECV,
 
     TXT_RV_REQ,
     TXT_RV_RECV,
@@ -122,25 +122,25 @@ function loadTxtRv(state = {
 	}
 }
 
-function utter(state = {
+function butter(state = {
     projects: [],
     results: [],
     activeProjectId: 1,
-    projsource: '/api/utter/projects'
+    projsource: '/api/butter/projects'
 }, action) {
 	switch(action.type) {
-	case UTTER_TAB_SELECT:
+	case BUTTER_TAB_SELECT:
 		  return Object.assign({}, state, {
 			    activeProjectId: action.activeProjectId
 		  });
-	case UTTER_GET_PROJECTS_START:
+	case BUTTER_GET_PROJECTS_START:
 		return state; // now we dont do any fetching indication, just by-pass the get action
-	case UTTER_PROJECTS_RECV:
+	case BUTTER_PROJECTS_RECV:
 		return Object.assign({}, state, {
 			  projects: action.rv,
         results: []
 		});
-	case UTTER_RESULTS_RECV:
+	case BUTTER_RESULTS_RECV:
 		  return Object.assign({}, state, {
 			    results: [...(state.results).slice(0, action.index),
                     Object.assign([], state.results[action.index], action.rv),
@@ -170,7 +170,7 @@ const rootReducer = combineReducers({
     mainform,
     loadTxtRv,
     selectTxtRv,
-    utter,
+    butter,
 	txtWorker,
 	scheduler
 });

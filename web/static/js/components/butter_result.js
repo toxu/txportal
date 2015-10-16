@@ -1,8 +1,8 @@
 import React from 'react';
-import '../../css/utter.css';
+import '../../css/butter.css';
 import * as bs from 'react-bootstrap';
 
-class UtterRv extends React.Component{
+class ButterRv extends React.Component{
     constructor(props) {
         super(props);
         this.state = {
@@ -77,7 +77,7 @@ class UtterRv extends React.Component{
 
         var titleOverlay = <bs.Tooltip>{content.value["commit"].msg}</bs.Tooltip>;
         return (
-           <div className="utter-result-item" key= {key}>
+           <div className="butter-result-item" key= {key}>
                 <div className={tileStatus}>
                 <span className={iconStatus} title="passed"/>
                 </div>
@@ -108,4 +108,4 @@ class UtterRv extends React.Component{
     }
 }
 
-export default UtterRv;
+export default ButterRv;
