@@ -46,6 +46,15 @@ export default class Machine extends Component{
         );
     }
 
+    getUnlockMachinePopover(props) {
+        return (
+            <Popover className="myPopover" title="Unlock machine">
+                <p>Are you sure you want to unlock this machine?</p>
+                <Button bsStyle="primary" onClick={() => props.onLockMachine(props.machineId, false, "")}>Yes</Button>
+            </Popover>
+        );
+    }
+
     getMachineAccessibilityIcon(props) {
         console.info("props", props);
         if (!this.isWorkerAlive(props)) {
@@ -56,8 +65,8 @@ export default class Machine extends Component{
             );
         } else if (props.status.lock) {
             return (
-                <OverlayTrigger placement="bottom" overlay={<Tooltip id={`${props.machineId}-Accessibility`}>{`Locked. "${props.status.lockMessage}" (Click to unlock it)`}</Tooltip>}>
-                    <span className="machineActionIcon glyphicon glyphicon-ban-circle" onClick={props.onLockMachine.bind(null, props.machineId, false, "")}></span>
+                <OverlayTrigger placement="bottom" trigger="click" rootClose overlay={this.getUnlockMachinePopover(props)}>
+                    <span className="machineActionIcon glyphicon glyphicon-ban-circle"></span>
                 </OverlayTrigger>
             );
         } else {
