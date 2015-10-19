@@ -151,7 +151,9 @@ export default class Machine extends Component{
                                 if (this.isConcernedJob(job)) {
                                     return (
                                         <ListGroupItem key={job.ID}>
-                                            <MachineJob key={job.ID} state="waiting" info={job} workerUrl={this.props.status.workerUrl}/>
+                                            <MachineJob key={job.ID} state="waiting" info={job}
+                                                        workerUrl={this.props.status.workerUrl}
+                                                        onKillJob={(jobId) => this.props.onKillJob(this.props.machineId, jobId)} />
                                         </ListGroupItem>
                                     );
                                 } else {
@@ -162,7 +164,9 @@ export default class Machine extends Component{
                                 if (this.isConcernedJob(job[1])) {
                                     return (
                                         <ListGroupItem key={job[1].ID} bsStyle="info">
-                                            <MachineJob key={job[1].ID} state="running" info={job[1]} workerUrl={this.props.status.workerUrl}/>
+                                            <MachineJob key={job[1].ID} state="running" info={job[1]}
+                                                        workerUrl={this.props.status.workerUrl}
+                                                        onKillJob={(jobId) => this.props.onKillJob(this.props.machineId, jobId)} />
                                         </ListGroupItem>
                                     );
                                 } else {
@@ -174,7 +178,9 @@ export default class Machine extends Component{
                                 if (this.isConcernedJob(job[1]) && i < nFinishedToShow) {
                                     return (
                                         <ListGroupItem key={job[1].ID} bsStyle={this.decideFinishedJobColor(job[1])}>
-                                            <MachineJob key={job[1].ID} state="finished" info={job[1]} workerUrl={this.props.status.workerUrl}/>
+                                            <MachineJob key={job[1].ID} state="finished" info={job[1]}
+                                                        workerUrl={this.props.status.workerUrl}
+                                                        onKillJob={(jobId) => this.props.onKillJob(this.props.machineId, jobId)} />
                                         </ListGroupItem>
                                     );
                                 } else {

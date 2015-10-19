@@ -66,6 +66,10 @@ export default class MachineJob extends Component{
         if (properties.length === 0) {
             throw new Error("No info");
         }
+        if (state === "running") {
+            let button = <Button bsStyle="danger" bsSize="small">STOP</Button>
+            properties.push(["Stop now?", button]);
+        }
         return (
             <Popover id={ID} className="myPopover">
                 <Grid className="propPanel">
@@ -118,6 +122,28 @@ export default class MachineJob extends Component{
         return true;
     }
 
+    makeStopJobConfirmPopover(info) {
+        if (info.ID) {
+            return (
+            <Popover title="Stop the job">
+                Are you sure you want to stop the job?
+                <hr className="thinDivider"/>
+                <Button bsStyle="danger" onClick={() => this.props.onKillJob(info.ID)}>Yes</Button>
+            </Popover>
+            );
+        } else {
+            return <Popover title="Error: no ID"></Popover>;
+        }
+    }
+
+    makeStopJobIcon(info) {
+        return (
+            <OverlayTrigger trigger="click" rootClose placement="bottom" overlay={this.makeStopJobConfirmPopover(info)}>
+                <span className="invisibleLink glyphicon glyphicon-remove" onClick={e => {e.stopPropagation()}}/>
+            </OverlayTrigger>
+        );
+    }
+
     render() {
         try {
             let content = (
@@ -167,7 +193,12 @@ export default class MachineJob extends Component{
                     } else if (this.props.info.testSuiteName) {
                         type = "transcode";
                     }
-                    let runContent = <div></div>;
+                    let runContent = (
+                    <Grid className="machineJobGroup">
+                        <Row>
+                            <Col md={12}>Fetching information ...</Col>
+                        </Row>
+                    </Grid>);
                     const { testSuiteName, subset, tag, acpBuild, progress, timestamp } = this.props.info;
                     if (type === "upgrade") {
                         // upgrade job
@@ -189,7 +220,7 @@ export default class MachineJob extends Component{
                         runContent = (
                             <Grid className="machineJobGroup">
                                 <Row>
-                                    <Col md={8}>Running {testSuiteName} test on build {acpBuild}</Col>
+                                    <Col md={8}>Running {testSuiteName} test on build {acpBuild} {this.makeStopJobIcon(this.props.info)}</Col>
                                     <Col md={4} className="endItem">
                                         <a href={`${this.props.workerUrl}/result/${timestamp}`}>
                                             <ProgressBar className="progressBar" active label={progress} min={-20} now={percent}/>

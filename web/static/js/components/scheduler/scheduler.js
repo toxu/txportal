@@ -2,8 +2,8 @@ import React, { Component, PropTypes } from 'react';
 import {connect} from 'react-redux';
 import { Glyphicon, Input, option, Button, Modal, Grid, ProgressBar, Row, Col, Panel, Alert } from 'react-bootstrap';
 import Machine from './machine.js';
-import { fetchStatus, lockMachine, createJob, showCreateJobModal } from '../../actions/scheduler.js';
-import "../../../css/scheduler.css"
+import { fetchStatus, lockMachine, createJob, showCreateJobModal, killJob } from '../../actions/scheduler.js';
+import "../../../css/scheduler.css";
 
 class Scheduler extends Component{
 
@@ -103,6 +103,10 @@ class Scheduler extends Component{
         this.props.lockMachine(machineId, lock, lockMessage);
     }
 
+    onKillJob(machineId, jobId) {
+        this.props.killJob(machineId, jobId);
+    }
+
     render() {
         try {
             return (
@@ -129,6 +133,7 @@ class Scheduler extends Component{
                                         machineId={key}
                                         onLockMachine={this.onLockMachine.bind(this)}
                                         showCreateJobModal={(machineId, show) => this.props.showCreateJobModal(machineId, show)}
+                                        onKillJob={this.onKillJob.bind(this)}
                                         />);
                             }
                         )}
@@ -157,4 +162,4 @@ function select(state) {
     return state.scheduler;
 }
 
-export default connect(select, {fetchStatus, lockMachine, createJob, showCreateJobModal})(Scheduler);
+export default connect(select, {fetchStatus, lockMachine, createJob, showCreateJobModal, killJob})(Scheduler);
