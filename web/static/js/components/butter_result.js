@@ -29,12 +29,13 @@ class ButterRv extends React.Component{
         const { content, key } = this.props;
         var tileStatus = 'tile-status';
         var iconStatus = 'icon-status';
-        if (content.value.result.error != undefined && content.value.result.error != "") {
-            tileStatus += ' errored';
-            iconStatus += ' errored';
-        } else {
+        // TODO: expect literal null
+        if (content.value.result.error == "null") {
             tileStatus += ' passed';
             iconStatus += ' passed';
+        } else {
+            tileStatus += ' errored';
+            iconStatus += ' errored';
         }
 
         var author = content.value["commit"].author;
