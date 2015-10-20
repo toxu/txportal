@@ -49,7 +49,7 @@ export function lockMachine(machineId, lock, lockMessage) {
 export function createJob(param) {
     return dispatch => {
         return fetch(schedulerUrl + "/submit_job", {method: "POST", body: JSON.stringify(param)})
-        .catch(result => console.info("lockMachine failed: ", result));
+        .catch(result => console.info("createJob failed: ", result));
     }
 
 }
@@ -59,5 +59,12 @@ export function showCreateJobModal(machineId, show) {
         type: SCHEDULER_SHOW_CREATE_JOB_MODAL,
         machineId: machineId,
         show: show
+    }
+}
+
+export function killJob(machineId, jobId) {
+    return dispatch => {
+        return fetch(schedulerUrl + "/kill_job", {method: "POST", body: JSON.stringify({setting: machineId, ID: jobId})})
+            .catch(result => console.info("kill job failed: ", result));
     }
 }

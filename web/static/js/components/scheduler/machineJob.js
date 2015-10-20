@@ -29,7 +29,7 @@ export default class MachineJob extends Component{
     }
 
     getJobInfoOverlay(info, state) {
-        const { startTime, ID, transcodePackBuild, progress, finished } = info;
+        const { startTime, ID, transcodePackBuild, progress, finished, stopTime } = info;
         let properties = [];
         if (!ID) {
             throw new Error("Job has no ID, info = " + JSON.stringify(info));
@@ -42,7 +42,17 @@ export default class MachineJob extends Component{
                 properties.push(["Duration:", strFromDuration(new Date(finished) - startDate)]);
             } else {
                 if (state == "running") {
-                    properties.push(["Duration:", strFromDuration(new Date() - startDate)]);
+                    let duration = new Date() - startDate;
+                    if (progress) {
+                        let percent = this.progressToPercent(progress);
+                        let remainingPercent = 100 - percent;
+                        let remainingTime = "\u221E";
+                        if (percent) {
+                            remainingTime = strFromDuration(remainingPercent * duration / percent);
+                        }
+                        properties.push(["Remaining time:", remainingTime]);
+                    }
+                    properties.push(["Duration:", strFromDuration(duration)]);
                 }
             }
         }
@@ -53,6 +63,12 @@ export default class MachineJob extends Component{
             let progressStr = typeof(progress) === "string"?progress:JSON.stringify(progress);
             properties.push(["Progress:", progressStr]);
         }
+
+        if (stopTime) {
+            let stopDate = this.parseTime(stopTime);
+            properties.push(["Abort time:", dateToString(stopDate)]);
+        }
+
         if (properties.length === 0) {
             throw new Error("No info");
         }
@@ -86,6 +102,51 @@ export default class MachineJob extends Component{
         }
     }
 
+    progressToPercent(progress) {
+        try {
+            let [, done, total] = /(\d+)\/(\d+)/.exec(progress);
+            let percent = (100 * parseInt(done)) / parseInt(total);
+            return percent;
+        } catch (e) {
+            console.info("Error occurred: ", e.stack);
+            return 0;
+        }
+    }
+
+    isResultOkay(info) {
+        let { result, finished, numSuccs, stopTime } = info;
+        if (result !== undefined && result !== "success")
+            return false;
+        if (finished !== undefined && finished === "aborted")
+            return false;
+        if (numSuccs !== undefined && numSuccs === 0)
+            return false;
+        return true;
+    }
+
+    makeStopJobConfirmPopover(info, stopJobID) {
+        if (info.ID) {
+            return (
+            <Popover title="Stop the job">
+                Are you sure you want to stop the job?
+                <hr className="thinDivider"/>
+                <Button bsStyle="danger" onClick={() => {this.props.onKillJob(info.ID); React.findDOMNode(this.refs[stopJobID]).click()}}>Yes</Button>
+            </Popover>
+            );
+        } else {
+            return <Popover title="Error: no ID"></Popover>;
+        }
+    }
+
+    makeStopJobIcon(info) {
+        let stopJobID = `stopJob${info.ID}`; // this is the ID assigned to the button node
+        return (
+            <OverlayTrigger trigger="click" rootClose placement="bottom" overlay={this.makeStopJobConfirmPopover(info, stopJobID)}>
+                <span ref={stopJobID} className="invisibleLink glyphicon glyphicon-remove" onClick={e => {e.stopPropagation()}}/>
+            </OverlayTrigger>
+        );
+    }
+
     render() {
         try {
             let content = (
@@ -107,9 +168,9 @@ export default class MachineJob extends Component{
                             <Grid className="machineJobGroup">
                                 <Row>
                                     <Col md={12}>
-                                    Run {suite} test
+                                    Pending to run {suite} test
                                     {subset && subset.length > 0 ? ` (${subset.join(", ")})` : ""}
-                                    {tag && tag.length > 0 ? ` with tag (${tag.join(", ")})` : ""}
+                                    {tag && tag.length > 0 ? ` with tag (${tag.join(", ")})` : ""} {this.makeStopJobIcon(this.props.info)}
                                     </Col>
                                 </Row>
                             </Grid>
@@ -120,7 +181,7 @@ export default class MachineJob extends Component{
                             <Grid className="machineJobGroup">
                                 <Row>
                                     <Col md={12}>
-                                    Upgrade ACP to build {build}
+                                    Pending to upgrade ACP to build {build} {this.makeStopJobIcon(this.props.info)}
                                     </Col>
                                 </Row>
                             </Grid>
@@ -135,14 +196,20 @@ export default class MachineJob extends Component{
                     } else if (this.props.info.testSuiteName) {
                         type = "transcode";
                     }
-                    let runContent = <div></div>;
-                    const { testSuiteName, subset, tag, acpBuild, progress, timestamp } = this.props.info;
+                    let runContent = (
+                    <Grid className="machineJobGroup">
+                        <Row>
+                            <Col md={12}>Fetching information ...</Col>
+                        </Row>
+                    </Grid>);
+                    const { testSuiteName, stopTime, subset, tag, acpBuild, progress, timestamp } = this.props.info;
                     if (type === "upgrade") {
                         // upgrade job
+                        let jobTitle = (stopTime?'Stopping upgrade':'Upgrading') + ` ACP to build ${this.props.info.upgrade}`;
                         runContent = (
                             <Grid className="machineJobGroup">
                                 <Row>
-                                    <Col md={8}>Upgrading ACP to build {this.props.info.upgrade}</Col>
+                                    <Col md={8}>{jobTitle} {this.makeStopJobIcon(this.props.info)}</Col>
                                     <Col md={4}>
                                         <a href={`${this.props.workerUrl}/result/${timestamp}`}>
                                             <ProgressBar className="progressBar" active min={-20} now={100}/>
@@ -153,12 +220,12 @@ export default class MachineJob extends Component{
                         );
                     } else if (type === "transcode") {
                         // run test
-                        let [, done, total] = /(\d+)\/(\d+)/.exec(progress);
-                        let percent = (100 * parseInt(done)) / parseInt(total);
+                        let percent = this.progressToPercent(progress);
+                        let jobTitle = (stopTime?'Stopping':'Running') + ` ${testSuiteName} test on build ${acpBuild}`;
                         runContent = (
                             <Grid className="machineJobGroup">
                                 <Row>
-                                    <Col md={8}>Running {testSuiteName} test on build {acpBuild}</Col>
+                                    <Col md={8}>{jobTitle} {this.makeStopJobIcon(this.props.info)}</Col>
                                     <Col md={4} className="endItem">
                                         <a href={`${this.props.workerUrl}/result/${timestamp}`}>
                                             <ProgressBar className="progressBar" active label={progress} min={-20} now={percent}/>
@@ -191,15 +258,13 @@ export default class MachineJob extends Component{
                     const { timestamp } = this.props.info;
                     if (type === "upgrade") {
                         const { upgrade } = this.props.info;
-                        let isShowIcon = result === "success" && finished !== "aborted";
-                        message = <span>{this.getResultIcon(isShowIcon)} Upgraded ACP to build {upgrade}</span>;
+                        message = <span>{this.getResultIcon(this.isResultOkay(this.props.info))} Upgraded ACP to build {upgrade}</span>;
                     } else if (type === "transcode") {
                         const { publish, testSuiteName, acpBuild, testSuiteNumOfCase } = this.props.info;
                         let { numSuccs } = this.props.info;
                         if (!numSuccs) {
                             numSuccs = 0;
                         }
-                        let isShowIcon = finished !== "aborted" && numSuccs != 0;
                         let resultUrl = resultUrlPrefix + timestamp;
                         let resultText;
                         if (publish === undefined || publish === true) {
@@ -208,7 +273,7 @@ export default class MachineJob extends Component{
                             resultText = `${numSuccs}/${testSuiteNumOfCase}`;
                         }
                         message =
-                            <span>{this.getResultIcon(isShowIcon)} Completed {testSuiteName} test on build {acpBuild}: {resultText}</span>;
+                            <span>{this.getResultIcon(this.isResultOkay(this.props.info))} Completed {testSuiteName} test on build {acpBuild}: {resultText}</span>;
                     } else {
                         message = <span>Unknown job</span>;
                     }

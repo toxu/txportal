@@ -56,6 +56,12 @@
     font-size: smaller;
 }
 
+.machineJobGroup.container div[class*='col-md'] {
+    padding-left: 0px;
+    padding-right: 0px;
+}
+
+
 .machineJobGroup.container .progressBar {
     margin-bottom: 0;
 }
@@ -90,5 +96,5 @@
 
 .machineActionIcon {
     margin-left: 2px;
-    /*font-size: large;*/
+    font-size: 17px;
 }
