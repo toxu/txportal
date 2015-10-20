@@ -29,7 +29,7 @@ export default class MachineJob extends Component{
     }
 
     getJobInfoOverlay(info, state) {
-        const { startTime, ID, transcodePackBuild, progress, finished } = info;
+        const { startTime, ID, transcodePackBuild, progress, finished, stopTime } = info;
         let properties = [];
         if (!ID) {
             throw new Error("Job has no ID, info = " + JSON.stringify(info));
@@ -63,6 +63,12 @@ export default class MachineJob extends Component{
             let progressStr = typeof(progress) === "string"?progress:JSON.stringify(progress);
             properties.push(["Progress:", progressStr]);
         }
+
+        if (stopTime) {
+            let stopDate = this.parseTime(stopTime);
+            properties.push(["Abort time:", dateToString(stopDate)]);
+        }
+
         if (properties.length === 0) {
             throw new Error("No info");
         }
@@ -108,7 +114,7 @@ export default class MachineJob extends Component{
     }
 
     isResultOkay(info) {
-        let { result, finished, numSuccs } = info;
+        let { result, finished, numSuccs, stopTime } = info;
         if (result !== undefined && result !== "success")
             return false;
         if (finished !== undefined && finished === "aborted")
@@ -164,7 +170,7 @@ export default class MachineJob extends Component{
                                     <Col md={12}>
                                     Pending to run {suite} test
                                     {subset && subset.length > 0 ? ` (${subset.join(", ")})` : ""}
-                                    {tag && tag.length > 0 ? ` with tag (${tag.join(", ")})` : ""}
+                                    {tag && tag.length > 0 ? ` with tag (${tag.join(", ")})` : ""} {this.makeStopJobIcon(this.props.info)}
                                     </Col>
                                 </Row>
                             </Grid>
@@ -175,7 +181,7 @@ export default class MachineJob extends Component{
                             <Grid className="machineJobGroup">
                                 <Row>
                                     <Col md={12}>
-                                    Pending to upgrade ACP to build {build}
+                                    Pending to upgrade ACP to build {build} {this.makeStopJobIcon(this.props.info)}
                                     </Col>
                                 </Row>
                             </Grid>

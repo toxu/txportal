@@ -130,9 +130,18 @@ export default class Machine extends Component{
         return this.isInfoValid(props) && Object.keys(props.status.status).length !== 0;
     }
 
+    decideRunningJobColor(info) {
+        let { stopTime } = info;
+        if (stopTime !== undefined)
+            return "warning";
+        return "info";
+    }
+
     decideFinishedJobColor(info) {
-        let { result, finished, numSuccs } = info;
+        let { testSuiteName, result, finished, numSuccs, stopTime, endTime } = info;
         if (finished !== undefined && finished === "aborted")
+            return "warning";
+        if (testSuiteName !== undefined && endTime === undefined)
             return "warning";
         if (result !== undefined && result !== "success")
             return "danger";
@@ -140,6 +149,7 @@ export default class Machine extends Component{
             return "danger";
         return "success";
     }
+
     render() {
         try {
             //console.info("machine", this.props.machineId, " haveInfo = ", haveInfo);
@@ -163,7 +173,7 @@ export default class Machine extends Component{
                             {this.props.status.status.running && this.props.status.status.running.map(job => {
                                 if (this.isConcernedJob(job[1])) {
                                     return (
-                                        <ListGroupItem key={job[1].ID} bsStyle="info">
+                                        <ListGroupItem key={job[1].ID} bsStyle={this.decideRunningJobColor(job[1])}>
                                             <MachineJob key={job[1].ID} state="running" info={job[1]}
                                                         workerUrl={this.props.status.workerUrl}
                                                         onKillJob={(jobId) => this.props.onKillJob(this.props.machineId, jobId)} />
