@@ -66,10 +66,6 @@ export default class MachineJob extends Component{
         if (properties.length === 0) {
             throw new Error("No info");
         }
-        if (state === "running") {
-            let button = <Button bsStyle="danger" bsSize="small">STOP</Button>
-            properties.push(["Stop now?", button]);
-        }
         return (
             <Popover id={ID} className="myPopover">
                 <Grid className="propPanel">
@@ -122,13 +118,13 @@ export default class MachineJob extends Component{
         return true;
     }
 
-    makeStopJobConfirmPopover(info) {
+    makeStopJobConfirmPopover(info, stopJobID) {
         if (info.ID) {
             return (
             <Popover title="Stop the job">
                 Are you sure you want to stop the job?
                 <hr className="thinDivider"/>
-                <Button bsStyle="danger" onClick={() => this.props.onKillJob(info.ID)}>Yes</Button>
+                <Button bsStyle="danger" onClick={() => {this.props.onKillJob(info.ID); React.findDOMNode(this.refs[stopJobID]).click()}}>Yes</Button>
             </Popover>
             );
         } else {
@@ -137,9 +133,10 @@ export default class MachineJob extends Component{
     }
 
     makeStopJobIcon(info) {
+        let stopJobID = `stopJob${info.ID}`; // this is the ID assigned to the button node
         return (
-            <OverlayTrigger trigger="click" rootClose placement="bottom" overlay={this.makeStopJobConfirmPopover(info)}>
-                <span className="invisibleLink glyphicon glyphicon-remove" onClick={e => {e.stopPropagation()}}/>
+            <OverlayTrigger trigger="click" rootClose placement="bottom" overlay={this.makeStopJobConfirmPopover(info, stopJobID)}>
+                <span ref={stopJobID} className="invisibleLink glyphicon glyphicon-remove" onClick={e => {e.stopPropagation()}}/>
             </OverlayTrigger>
         );
     }
@@ -199,13 +196,14 @@ export default class MachineJob extends Component{
                             <Col md={12}>Fetching information ...</Col>
                         </Row>
                     </Grid>);
-                    const { testSuiteName, subset, tag, acpBuild, progress, timestamp } = this.props.info;
+                    const { testSuiteName, stopTime, subset, tag, acpBuild, progress, timestamp } = this.props.info;
                     if (type === "upgrade") {
                         // upgrade job
+                        let jobTitle = (stopTime?'Stopping upgrade':'Upgrading') + ` ACP to build ${this.props.info.upgrade}`;
                         runContent = (
                             <Grid className="machineJobGroup">
                                 <Row>
-                                    <Col md={8}>Upgrading ACP to build {this.props.info.upgrade}</Col>
+                                    <Col md={8}>{jobTitle} {this.makeStopJobIcon(this.props.info)}</Col>
                                     <Col md={4}>
                                         <a href={`${this.props.workerUrl}/result/${timestamp}`}>
                                             <ProgressBar className="progressBar" active min={-20} now={100}/>
@@ -217,10 +215,11 @@ export default class MachineJob extends Component{
                     } else if (type === "transcode") {
                         // run test
                         let percent = this.progressToPercent(progress);
+                        let jobTitle = (stopTime?'Stopping':'Running') + ` ${testSuiteName} test on build ${acpBuild}`;
                         runContent = (
                             <Grid className="machineJobGroup">
                                 <Row>
-                                    <Col md={8}>Running {testSuiteName} test on build {acpBuild} {this.makeStopJobIcon(this.props.info)}</Col>
+                                    <Col md={8}>{jobTitle} {this.makeStopJobIcon(this.props.info)}</Col>
                                     <Col md={4} className="endItem">
                                         <a href={`${this.props.workerUrl}/result/${timestamp}`}>
                                             <ProgressBar className="progressBar" active label={progress} min={-20} now={percent}/>
