@@ -84,7 +84,7 @@ export default class Machine extends Component{
                 <tr>
                     <td>
                         <span className={this.isWorkerAlive(props)?"headerLabel":"headerLabel notAlive"}>
-                            <a href={`http://${props.status.setting.ACP_management_IP}`}>ACP-{props.machineId}</a>
+                            <a href={`http://${props.status.setting.ACP_management_IP}`} target="_blank">ACP-{props.machineId}</a>
                         </span>
                     </td>
                     <td className="headerCommand">
@@ -104,8 +104,8 @@ export default class Machine extends Component{
         <Popover id={`machineDetails-${props.machineId}`} title="Machine Details">
             <table className="propTable">
                 <tbody>
-                {this.makeProp("Worker", <a href={props.status.workerUrl}>{props.status.worker}</a>)}
-                {this.makeProp("Streamer", <a href={"http://" + props.status.setting.streamer + ":1234"}>{props.status.setting.streamer}</a>)}
+                {this.makeProp("Worker", <a href={props.status.workerUrl} target="_blank">{props.status.worker}</a>)}
+                {this.makeProp("Streamer", <a href={"http://" + props.status.setting.streamer + ":1234"} target="_blank">{props.status.setting.streamer}</a>)}
                 {this.makeProp("Supported Tests", props.status.setting.supported_test_types.join(", "))}
                 </tbody>
             </table>
