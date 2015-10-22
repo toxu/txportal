@@ -44,11 +44,11 @@ export default class MachineJob extends Component{
                 if (state == "running") {
                     let duration = new Date() - startDate;
                     if (progress) {
-                        let percent = this.progressToPercent(progress);
-                        let remainingPercent = 100 - percent;
+                        let [pass, done, total] = this.parseProgress(progress);
+                        let remaining = total - done;
                         let remainingTime = "\u221E";
-                        if (percent) {
-                            remainingTime = strFromDuration(remainingPercent * duration / percent);
+                        if (done && total) {
+                            remainingTime = strFromDuration(remaining * duration * total / done);
                         }
                         properties.push(["Remaining time:", remainingTime]);
                     }
@@ -69,11 +69,27 @@ export default class MachineJob extends Component{
             properties.push(["Abort time:", dateToString(stopDate)]);
         }
 
+        if (state === "running") {
+            properties.push(["Stop now:", this.makeStopJobButton(info)]);
+        }
+
+        // debug // replaced by title
+        //properties.push(["Details:", (<OverlayTrigger trigger="hover" placement="bottom" overlay={<Popover className="myLargePopover" title="Details for Debug">{JSON.stringify(info)}</Popover>}>
+        //    <span className="glyphicon glyphicon-list-alt" onClick={e => {e.stopPropagation()}}/>
+        //</OverlayTrigger>)]);
+
         if (properties.length === 0) {
             throw new Error("No info");
         }
+
+        let title = <div>Job Information &nbsp;
+                        <OverlayTrigger trigger="hover" placement="bottom" overlay={<Popover className="myLargePopover" title="Debug Information"><pre>{JSON.stringify(info, null, '\t')}</pre></Popover>}>
+                            <span className="glyphicon glyphicon-list-alt" onClick={e => {e.stopPropagation()}}/>
+                        </OverlayTrigger>
+                    </div>;
+
         return (
-            <Popover id={ID} className="myPopover">
+            <Popover id={ID} className="myPopover" title={title}>
                 <Grid className="propPanel">
                     {properties.map(p => {
                         return (
@@ -95,32 +111,43 @@ export default class MachineJob extends Component{
             return(
             <OverlayTrigger trigger={["click"]} rootClose placement="bottom"
                             overlay={overlay}>
-                {content}
+                <span className="machineJobLink">{content}</span>
             </OverlayTrigger>);
         } catch (e) {
             return content;
         }
     }
 
-    progressToPercent(progress) {
+    // [pass, done, total]
+    parseProgress(progress) {
         try {
-            let [, done, total] = /(\d+)\/(\d+)/.exec(progress);
-            let percent = (100 * parseInt(done)) / parseInt(total);
-            return percent;
+            let [, done, transcoded, total] = /(\d+)\/(\d+)\/(\d+)/.exec(progress);
+            return [parseInt(done), parseInt(transcoded), parseInt(total)];
         } catch (e) {
-            console.info("Error occurred: ", e.stack);
-            return 0;
+            //console.info("Error occurred: ", e.stack);
+            try {
+                let [, done, total] = /(\d+)\/(\d+)/.exec(progress);
+                return [parseInt(done), parseInt(done), parseInt(total)];
+            } catch (e) {
+                //console.info("Error occurred: ", e.stack);
+                return [0, 0, 0];
+            }
         }
     }
 
     isResultOkay(info) {
-        let { result, finished, numSuccs, stopTime } = info;
+        let { testSuiteName, result, finished, numSuccs, stopTime, endTime } = info;
         if (result !== undefined && result !== "success")
             return false;
-        if (finished !== undefined && finished === "aborted")
-            return false;
-        if (numSuccs !== undefined && numSuccs === 0)
-            return false;
+        if (testSuiteName === undefined) {
+            // for other
+            if (finished !== undefined && finished === "aborted")
+                return false;
+        } else {
+            // for transcoding
+            if (numSuccs === undefined || numSuccs === 0)
+                return false;
+        }
         return true;
     }
 
@@ -143,6 +170,15 @@ export default class MachineJob extends Component{
         return (
             <OverlayTrigger trigger="click" rootClose placement="bottom" overlay={this.makeStopJobConfirmPopover(info, stopJobID)}>
                 <span ref={stopJobID} className="invisibleLink glyphicon glyphicon-remove" onClick={e => {e.stopPropagation()}}/>
+            </OverlayTrigger>
+        );
+    }
+
+    makeStopJobButton(info) {
+        let stopJobID = `stopJobButton${info.ID}`; // this is the ID assigned to the button node
+        return (
+            <OverlayTrigger trigger="click" rootClose placement="bottom" overlay={this.makeStopJobConfirmPopover(info, stopJobID)}>
+                <Button ref={stopJobID} bsSize="small" bsStyle="danger">Stop</Button>
             </OverlayTrigger>
         );
     }
@@ -209,9 +245,9 @@ export default class MachineJob extends Component{
                         runContent = (
                             <Grid className="machineJobGroup">
                                 <Row>
-                                    <Col md={8}>{jobTitle} {this.makeStopJobIcon(this.props.info)}</Col>
+                                    <Col md={8}>{this.wrapWithOverlay(type, jobTitle)} {this.makeStopJobIcon(this.props.info)}</Col>
                                     <Col md={4}>
-                                        <a href={`${this.props.workerUrl}/result/${timestamp}`}>
+                                        <a href={`${this.props.workerUrl}/result/${timestamp}`} target="_blank">
                                             <ProgressBar className="progressBar" active min={-20} now={100}/>
                                         </a>
                                     </Col>
@@ -220,22 +256,25 @@ export default class MachineJob extends Component{
                         );
                     } else if (type === "transcode") {
                         // run test
-                        let percent = this.progressToPercent(progress);
+                        let [done, transcoded, total] = this.parseProgress(progress);
                         let jobTitle = (stopTime?'Stopping':'Running') + ` ${testSuiteName} test on build ${acpBuild}`;
                         runContent = (
                             <Grid className="machineJobGroup">
                                 <Row>
-                                    <Col md={8}>{jobTitle} {this.makeStopJobIcon(this.props.info)}</Col>
+                                    <Col md={8}>{this.wrapWithOverlay(type, jobTitle)} {this.makeStopJobIcon(this.props.info)}</Col>
                                     <Col md={4} className="endItem">
-                                        <a href={`${this.props.workerUrl}/result/${timestamp}`}>
-                                            <ProgressBar className="progressBar" active label={progress} min={-20} now={percent}/>
+                                        <a href={`${this.props.workerUrl}/result/${timestamp}`} target="_blank">
+                                            <ProgressBar className="progressBar">
+                                                <ProgressBar active bsStyle="default" label={progress} min={-(total * 30 / 100)} now={done} max={total} key={1}/>
+                                                <ProgressBar bsStyle="info" active now={transcoded - done} key={2}/>
+                                            </ProgressBar>
                                         </a>
                                     </Col>
                                 </Row>
                             </Grid>
                         );
                     }
-                    content = this.wrapWithOverlay(type, runContent);
+                    content = runContent;
                     break;
                 }
                 case "finished":
@@ -255,6 +294,7 @@ export default class MachineJob extends Component{
                         ago = timeSince(new Date(finished)) + " ago";
                     }
                     let message = {};
+                    let resultText = "";
                     const { timestamp } = this.props.info;
                     if (type === "upgrade") {
                         const { upgrade } = this.props.info;
@@ -266,26 +306,25 @@ export default class MachineJob extends Component{
                             numSuccs = 0;
                         }
                         let resultUrl = resultUrlPrefix + timestamp;
-                        let resultText;
                         if (publish === undefined || publish === true) {
-                            resultText = <a href={resultUrl}>{numSuccs}/{testSuiteNumOfCase}</a>;
+                            resultText = <a href={resultUrl} target="_blank">{numSuccs}/{testSuiteNumOfCase}</a>;
                         } else {
                             resultText = `${numSuccs}/${testSuiteNumOfCase}`;
                         }
                         message =
-                            <span>{this.getResultIcon(this.isResultOkay(this.props.info))} Completed {testSuiteName} test on build {acpBuild}: {resultText}</span>;
+                            <span>{this.getResultIcon(this.isResultOkay(this.props.info))} Completed {testSuiteName} test on build {acpBuild}: </span>;
                     } else {
                         message = <span>Unknown job</span>;
                     }
                     let finishedContent = (
                         <Grid className="machineJobGroup">
                             <Row>
-                                <Col md={9}>{message} <a href={`${this.props.workerUrl}/result/${timestamp}`}><span className="invisibleLink glyphicon glyphicon-link"/></a></Col>
-                                <Col md={3} className="endItem">{ago}</Col>
+                                <Col md={10}>{this.wrapWithOverlay(type, message)} {resultText} <a href={`${this.props.workerUrl}/result/${timestamp}`} target="_blank"><span className="invisibleLink glyphicon glyphicon-link"/></a></Col>
+                                <Col md={2} className="endItem">{ago}</Col>
                             </Row>
                         </Grid>
                     );
-                    content = this.wrapWithOverlay(type, finishedContent);
+                    content = finishedContent;
                     break;
                 }
             }

@@ -15,13 +15,13 @@ export function timeSince(to) {
     }
     interval = Math.floor(seconds / 3600);
     if (interval >= 1) {
-        return interval + " hours";
+        return interval + " hrs";
     }
     interval = Math.floor(seconds / 60);
     if (interval >= 1) {
-        return interval + " minutes";
+        return interval + " min";
     }
-    return Math.floor(seconds) + " seconds";
+    return Math.floor(seconds) + " sec";
 }
 
 export function strFromDuration(duration) {
@@ -44,7 +44,7 @@ export function strFromDuration(duration) {
     }
     interval = Math.floor(seconds / 3600);
     if (interval >= 1) {
-        ret += interval + " hr ";
+        ret += interval + " hrs ";
         seconds -= interval * 3600;
     }
     interval = Math.floor(seconds / 60);
@@ -52,7 +52,7 @@ export function strFromDuration(duration) {
         ret += interval + " min ";
         seconds -= interval * 60;
     }
-    ret += Math.floor(seconds) + " s ";
+    ret += Math.floor(seconds) + " sec ";
     return ret;
 }
 

@@ -137,9 +137,9 @@ class Scheduler extends Component{
                                         />);
                             }
                         )}
-                        <div className="topmostRefreshButton">
+                        {/*<div className="topmostRefreshButton">
                             <Button onClick={this.props.fetchStatus}><Glyphicon glyph="repeat"/></Button>
-                        </div>
+                        </div>*/}
                     </div>
                     }
                 </div>
