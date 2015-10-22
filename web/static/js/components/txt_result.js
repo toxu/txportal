@@ -30,7 +30,7 @@ class TxtRv extends React.Component{
 
 
     render() {
-        const {dispatch, result} = this.props;
+        const {dispatch, result, filterByName, filterByRSTP, filterByTag} = this.props;
         if(result == undefined){
             return <div />;
         }
@@ -41,6 +41,25 @@ class TxtRv extends React.Component{
         var tags = result[5];
         var PassRatio = result[6];
         var Date = result[7];
+
+        if(filterByName != ''){
+			var nameClass = "nameSelected";
+		}
+		else{
+			var nameClass = "nameUnselected";
+		}
+		if(filterByRSTP != ''){
+			var RSTPClass = "RSTPSelected";
+		}
+		else{
+			var RSTPClass = "RSTPUnselected";
+		}
+		if(filterByTag != ''){
+			var tagClass= "tagSelected";
+		}
+		else{
+			var tagClass= "tagUnselected";
+		}
 
         var tileStatus = 'tile-status';
         var iconStatus = 'icon-status';
@@ -53,10 +72,6 @@ class TxtRv extends React.Component{
             tileStatus += ' prepare';
             iconStatus += ' prepare';
         }
-//        else if(result[0] <= 0.75 && result[0] > 0.5){
-//            tileStatus += ' aware';
-//            iconStatus += ' aware';
-//        }
         else {
             tileStatus += ' passed';
             iconStatus += ' passed';
@@ -85,9 +100,9 @@ class TxtRv extends React.Component{
                 <span className={iconStatus} title="passed"/>
                 </div>
                 <div className="tile-main">
-                <h2><span className="ACPBuild">ACP-{ACPBuild}</span> <span>{labels.map(label => {if(label == 'TS') var type='TS'; if(label=='SDI') var type='SDI'; return <span onClick={this.tagOnClick.bind(this)} className={"labels label label-primary "+type}>{label}</span>})}</span></h2>
+                <h2><span className="ACPBuild">ACP-{ACPBuild}</span> <span>{labels.map(label => {if(label == 'TS') var type='TS'; if(label=='SDI') var type='SDI'; return <span onClick={this.tagOnClick.bind(this)} className={"labels label label-primary "+type+" "+tagClass}>{label}</span>})}</span></h2>
                 <div className="tile-info">
-                <span className="Date">Date-{Date}</span>   <span className="Name" onClick={this.nameOnClick.bind(this)}>IP-{Name}</span>  <span className="RSTP" onClick={this.RSTPOnclick.bind(this)}>TXP-{RSTP}</span>
+                <span className="Date">{Date}</span>   <span className={"Name "+nameClass} onClick={this.nameOnClick.bind(this)}>{Name}</span>  <span className={"RSTP "+RSTPClass} onClick={this.RSTPOnclick.bind(this)}>TXP-{RSTP}</span>
                 </div>
                 </div>
                 <div className="tile-additional">
@@ -101,4 +116,15 @@ class TxtRv extends React.Component{
     }
 }
 
-export default connect()(TxtRv);
+function select(state){
+    var filterByName = state.loadTxtRv.filterByName;
+    var filterByRSTP = state.loadTxtRv.filterByRSTP;
+    var filterByTag = state.loadTxtRv.filterByTag;
+    return{
+        filterByName: filterByName,
+    	filterByRSTP: filterByRSTP,
+    	filterByTag: filterByTag
+    }
+}
+
+export default connect(select)(TxtRv);

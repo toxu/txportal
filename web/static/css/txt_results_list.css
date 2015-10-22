@@ -21,6 +21,7 @@
 }
 .Date {
     float: left;
+    height: 16px;
 }
 
 .Name{
@@ -104,7 +105,7 @@
 	display: block;
 	float: left;
 	font-family: 'Source Sans Pro', Helvetica, sans-serif;
-	font-size: 14px;
+	font-size: 13px;
 	font-style: normal;
 	font-weight: normal;
 	height: 49.2188px;
@@ -118,13 +119,18 @@
 	width: 65%;
 }
 
+.tilemain span {
+	color: rgb(141, 141, 141);
+	font-size: 13px;
+}
+
 .tile-main h2 {
 	box-sizing: border-box;
 	color: rgb(128, 128, 128);
 	cursor: auto;
 	display: block;
 	font-family: 'Source Sans Pro', Helvetica, sans-serif;
-	font-size: 14px;
+	font-size: 13px;
 	font-style: normal;
 	font-weight: normal;
 	height: 16px;
@@ -144,10 +150,10 @@
 	cursor: auto;
 	display: block;
 	font-family: 'Source Sans Pro', Helvetica, sans-serif;
-	font-size: 14px;
+	font-size: 13px;
 	font-style: normal;
 	font-weight: normal;
-	height: 22px;
+	height: 19px;
 	line-height: 22px;
 	margin-bottom: 0px;
 	margin-left: 0px;
@@ -271,17 +277,54 @@
 }
 
 .ACPBuild {
-    min-width: 200px;
+    min-width: 150px;
     float: left;
-    font-size: 16px;
+    font-size: 13px;
 }
 
 .txt-result-item .TS {
-    background-color: rgb(102,102,102);
     cursor: pointer;
-    }
+    font-size: 11px;
+ }
 
 .txt-result-item .SDI {
-    background-color: rgb(128,128,128);
     cursor: pointer;
-   }
+    font-size: 11px;
+}
+
+.nameSelected {
+	border-style: solid;
+	border-color: darkgrey;
+	border-width: 1px;
+}
+
+.nameUnselected {
+	border-style: none;
+}
+
+.RSTPSelected {
+	border-style: solid;
+	border-color: darkgrey;
+	border-width: 1px;
+}
+
+.RSTPUnselected {
+	border-style: none;
+}
+
+.txt-result-item .tagSelected {
+	background-color: white;
+	color: rgb(141,141,141);
+	border-style: solid;
+	border-width: 1px;
+	padding: 1px 5.6px 1px 5.6px;
+	border-color: darkgrey;
+}
+
+.txt-result-item .tagUnselected {
+	background-color: rgb(141,141,141);
+	color: white;
+	border-style: none;
+	border-width: 0px;
+	padding: 2px 6.6px 2px 6.6px;
+}
