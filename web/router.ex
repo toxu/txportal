@@ -34,7 +34,6 @@ defmodule Txportal.Router do
   scope "/", Txportal do
     pipe_through :browser # Use the default browser stack
 
-    get "/:page", PageController, :index
     get "/", PageController, :index
   end
 
