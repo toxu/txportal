@@ -154,7 +154,7 @@ export default class Machine extends Component{
         try {
             //console.info("machine", this.props.machineId, " haveInfo = ", haveInfo);
             return (
-                <Panel header={this.getPanelHeader(this.props)} className="machinePanel">
+                <Panel header={this.getPanelHeader(this.props)} className="machinePanel" bsStyle={this.props.status.lock?"danger":"default"}>
                     {this.isInfoValid(this.props) ?
                         <ListGroup fill>
                             {this.props.status.status.waiting && this.props.status.status.waiting.map(job => {
