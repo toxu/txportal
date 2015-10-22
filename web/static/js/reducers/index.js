@@ -153,7 +153,7 @@ function butter(state = {
 }
 
 function mainform(state = {
-    activePageId: 1
+    activePageId: defaultActivePageId // defined at page_controller.ex
 }, action) {
     switch (action.type) {
     case MF_PAGE_SELECT:
