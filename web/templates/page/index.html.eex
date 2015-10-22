@@ -1,3 +1,10 @@
+<script>
+    <%= if @page do %>
+      var defaultActivePageId = <%= @page %>;
+    <% else %>
+      var defaultActivePageId = 1;
+    <% end %>
+</script>
 <div id="mydiv">
 our crap should go here
 </div>
