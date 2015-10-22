@@ -50,27 +50,6 @@ class TxtResultList extends React.Component{
 				'Last Month': [moment().subtract(1, 'month').startOf('month'), moment().subtract(1, 'month').endOf('month')]
 				};
 
-		if(filterByName != ''){
-			$(".Name").css("background-color", "yellow");
-		}
-		else{
-			$(".Name").css("background-color", "white");
-		}
-		if(filterByRSTP != ''){
-			$(".RSTP").css("background-color", "yellow");
-		}
-		else{
-			$(".RSTP").css("background-color", "white");
-		}
-		if(filterByTag != ''){
-			$(".SDI").css({"border-right-width":"20px", "border-right-color":"yellow", "border-right-style":"solid"});
-			$(".TS").css({"border-right-width":"20px", "border-right-color":"yellow", "border-right-style":"solid"});
-		}
-		else{
-			$(".SDI").css({"border-right-width":"0px", "border-right-color":"yellow", "border-right-style":"solid"});
-			$(".TS").css({"border-right-width":"00px", "border-right-color":"yellow", "border-right-style":"solid"});
-		}
-
 		var start = moment(startDate);
 		var end = moment(endDate);
 		var label = startDate + ' - ' + endDate;
@@ -176,6 +155,33 @@ function sortByDate(a,b){
 	return parseInt(date_b) - parseInt(date_a);
 }
 
+function sortByACP(a,b){
+	try{
+		var build_a = a[2];
+		var build_b = b[2];
+	}
+	catch(e){
+		var build_a = "0.0.0.0.0";
+		var build_b = "0.0.0.0.0";
+	}
+	try{
+		var val_a = build_a.match(/(\d+)/g);
+		var val_b = build_b.match(/(\d+)/g);
+	}
+	catch(e){
+		var val_a = ['0','0','0','0','0'];
+		var val_b = ['0','0','0','0','0'];
+	}
+	var length = Math.min(val_a.length, val_b.length);
+	for(var i=0;i<length;i++){
+		if(val_a[i]-val_b[i] > 0)
+			return -1;
+		if(val_a[i]-val_b[i] <0)
+			return 1;
+	}
+	return 0;
+}
+
 function filterByDate(rows, startDate, endDate){
 	try{
 		var start = startDate.match(/\d/g);
@@ -223,7 +229,7 @@ function filterByDate(rows, startDate, endDate){
 }
 
 function filterByName(rows, name){
-	if(name == "" || name == undefined || name =="IP-"){
+	if(name == "" || name == undefined){
 		return rows;
 	}
 	var filtered_rows = rows.filter(
@@ -239,7 +245,7 @@ function filterByName(rows, name){
 }
 
 function filterByRSTP(rows, build){
-	if(build == "" || build == undefined || build =="RSTP-"){
+	if(build == "" || build == undefined || build =="TXP-"){
 		return rows;
 	}
 	var filtered_rows = rows.filter(
@@ -330,7 +336,7 @@ function createRows(result, filter, startDate, endDate, name, rstp, tag, ratio){
 					return false;
 				}
 			);
-			return filtered_rows.sort(sortByDate);
+			return filtered_rows.sort(sortByACP);
 		}
 }
 

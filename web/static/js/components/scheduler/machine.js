@@ -46,6 +46,15 @@ export default class Machine extends Component{
         );
     }
 
+    getUnlockMachinePopover(props) {
+        return (
+            <Popover className="myPopover" title="Unlock machine">
+                <p>Are you sure you want to unlock this machine?</p>
+                <Button bsStyle="primary" onClick={() => props.onLockMachine(props.machineId, false, "")}>Yes</Button>
+            </Popover>
+        );
+    }
+
     getMachineAccessibilityIcon(props) {
         console.info("props", props);
         if (!this.isWorkerAlive(props)) {
@@ -56,8 +65,8 @@ export default class Machine extends Component{
             );
         } else if (props.status.lock) {
             return (
-                <OverlayTrigger placement="bottom" overlay={<Tooltip id={`${props.machineId}-Accessibility`}>{`Locked. "${props.status.lockMessage}" (Click to unlock it)`}</Tooltip>}>
-                    <span className="machineActionIcon glyphicon glyphicon-ban-circle" onClick={props.onLockMachine.bind(null, props.machineId, false, "")}></span>
+                <OverlayTrigger placement="bottom" trigger="click" rootClose overlay={this.getUnlockMachinePopover(props)}>
+                    <span className="machineActionIcon glyphicon glyphicon-ban-circle"></span>
                 </OverlayTrigger>
             );
         } else {
@@ -121,6 +130,26 @@ export default class Machine extends Component{
         return this.isInfoValid(props) && Object.keys(props.status.status).length !== 0;
     }
 
+    decideRunningJobColor(info) {
+        let { stopTime } = info;
+        if (stopTime !== undefined)
+            return "warning";
+        return "info";
+    }
+
+    decideFinishedJobColor(info) {
+        let { testSuiteName, result, finished, numSuccs, stopTime, endTime } = info;
+        if (finished !== undefined && finished === "aborted")
+            return "warning";
+        if (testSuiteName !== undefined && endTime === undefined)
+            return "warning";
+        if (result !== undefined && result !== "success")
+            return "danger";
+        if (numSuccs !== undefined && numSuccs === 0)
+            return "danger";
+        return "success";
+    }
+
     render() {
         try {
             //console.info("machine", this.props.machineId, " haveInfo = ", haveInfo);
@@ -132,7 +161,9 @@ export default class Machine extends Component{
                                 if (this.isConcernedJob(job)) {
                                     return (
                                         <ListGroupItem key={job.ID}>
-                                            <MachineJob key={job.ID} state="waiting" info={job} workerUrl={this.props.status.workerUrl}/>
+                                            <MachineJob key={job.ID} state="waiting" info={job}
+                                                        workerUrl={this.props.status.workerUrl}
+                                                        onKillJob={(jobId) => this.props.onKillJob(this.props.machineId, jobId)} />
                                         </ListGroupItem>
                                     );
                                 } else {
@@ -142,8 +173,10 @@ export default class Machine extends Component{
                             {this.props.status.status.running && this.props.status.status.running.map(job => {
                                 if (this.isConcernedJob(job[1])) {
                                     return (
-                                        <ListGroupItem key={job[1].ID} bsStyle="info">
-                                            <MachineJob key={job[1].ID} state="running" info={job[1]} workerUrl={this.props.status.workerUrl}/>
+                                        <ListGroupItem key={job[1].ID} bsStyle={this.decideRunningJobColor(job[1])}>
+                                            <MachineJob key={job[1].ID} state="running" info={job[1]}
+                                                        workerUrl={this.props.status.workerUrl}
+                                                        onKillJob={(jobId) => this.props.onKillJob(this.props.machineId, jobId)} />
                                         </ListGroupItem>
                                     );
                                 } else {
@@ -154,8 +187,10 @@ export default class Machine extends Component{
                             {this.props.status.status.finished && this.props.status.status.finished.map((job, i) => {
                                 if (this.isConcernedJob(job[1]) && i < nFinishedToShow) {
                                     return (
-                                        <ListGroupItem key={job[1].ID} bsStyle="success">
-                                            <MachineJob key={job[1].ID} state="finished" info={job[1]} workerUrl={this.props.status.workerUrl}/>
+                                        <ListGroupItem key={job[1].ID} bsStyle={this.decideFinishedJobColor(job[1])}>
+                                            <MachineJob key={job[1].ID} state="finished" info={job[1]}
+                                                        workerUrl={this.props.status.workerUrl}
+                                                        onKillJob={(jobId) => this.props.onKillJob(this.props.machineId, jobId)} />
                                         </ListGroupItem>
                                     );
                                 } else {

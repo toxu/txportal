@@ -90,7 +90,7 @@ function loadTxtRv(state = {
 			endDate: action.endDate
 		});
 	case TXT_Filter_BY_NAME:
-		if(action.filterByName == 'IP-' || action.filterByName == state.filterByName)
+		if(action.filterByName == state.filterByName)
 			var name = "";
 		else
 			var name = action.filterByName;
@@ -98,7 +98,7 @@ function loadTxtRv(state = {
 			filterByName: name
 		});
 	case TXT_Filter_BY_RSTP:
-		if(action.filterByRSTP == 'TXP-' || action.filterByRSTP == state.filterByRSTP)
+		if(action.filterByRSTP.indexOf('TXP-') != -1 || action.filterByRSTP == state.filterByRSTP)
 			var rstp = "";
 		else
 			var rstp = action.filterByRSTP;
@@ -153,7 +153,7 @@ function butter(state = {
 }
 
 function mainform(state = {
-    activePageId: 4
+    activePageId: 1
 }, action) {
     switch (action.type) {
     case MF_PAGE_SELECT:
