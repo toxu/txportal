@@ -32,4 +32,4 @@ config :txportal, :couchdb_url,
 "http://10.50.100.213:5984"
 
 config :txportal, :txt_sch_url,
-"http://10.50.104.13:23456/"
+"http://10.50.100.127:23456/"
