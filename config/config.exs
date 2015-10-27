@@ -27,3 +27,9 @@ import_config "#{Mix.env}.exs"
 config :phoenix, :generators,
   migration: true,
   binary_id: false
+
+config :txportal, :couchdb_url,
+"http://10.50.100.213:5984"
+
+config :txportal, :txt_sch_url,
+"http://10.50.104.13:23456/"

@@ -16,9 +16,6 @@ defmodule Txportal.Router do
   scope "/api", Txportal do
     pipe_through :api
 
-    get "/txt/results", TxtController, :results
-
-    get "/txt/status", TxtWorkerController, :status
     post "/scheduler/:action", SchedulerController, :redirect
 
     get "/butter/projects", ButterController, :projects
