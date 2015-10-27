@@ -2,7 +2,7 @@ require Logger
 defmodule Txportal.SchedulerController do
   use Txportal.Web, :controller
 
-  @scheduler_status_url "http://10.50.104.13:23456/"
+  @scheduler_status_url "http://10.50.100.127:23456/"
 
   def redirect(conn, param) do
     {:ok, data, _conn_details} = Plug.Conn.read_body(conn)
