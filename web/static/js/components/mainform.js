@@ -38,9 +38,6 @@ class MainForm extends React.Component{
             content = <Butter/>;
             break;
         case 3:
-            content = <Worker/>;
-            break;
-        case 4:
             content = <Scheduler/>;
             break;
         default:
@@ -54,8 +51,7 @@ class MainForm extends React.Component{
 		<NavDropdown eventKey={1} title="TXT" id="txt-dropdown">
                     <MenuItem eventKey="1.1" href="javascript:void(0);" onSelect={this.handleSelect.bind(this, 1)}>Results</MenuItem>
                     <MenuItem eventKey="1.2">Statistics</MenuItem>
-                    <MenuItem eventKey="1.3" href="javascript:void(0);" onSelect={this.handleSelect.bind(this, 3)}>Workers</MenuItem>
-                    <MenuItem eventKey="1.4" href="javascript:void(0);" onSelect={this.handleSelect.bind(this, 4)}>Scheduler</MenuItem>
+                    <MenuItem eventKey="1.3" href="javascript:void(0);" onSelect={this.handleSelect.bind(this, 3)}>Scheduler</MenuItem>
 		</NavDropdown>
 		<NavDropdown eventKey={2} title="Butter" id="butter-dropdown">
                     <MenuItem eventKey="2.1" href="javascript:void(0);" onSelect={this.handleSelect.bind(this, 2)}>Results</MenuItem>

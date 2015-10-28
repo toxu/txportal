@@ -2,7 +2,7 @@ require Logger
 defmodule Txportal.PotatoController do
   use Txportal.Web, :controller
 
-  @db_url "http://10.50.100.213:5984"
+  @db_url Application.get_env(:txportal, :couchdb_url)
 
   def view_results(conn, %{"db" => db, "design" => design, "view" => view}) do
     HTTPoison.start

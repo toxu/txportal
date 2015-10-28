@@ -4,7 +4,6 @@ import {
     TXT_RV_RECV,
     TXT_RV_SELECT_ONE,
     TXT_RV_INVALIDATE,
-	TXT_WORKER_STATUS_RECV,
     TXT_SET_FILTER,
     TXT_SET_DATE,
     TXT_Filter_BY_NAME,
@@ -47,22 +46,6 @@ export function fetchTxtRv() {
 		return fetch('/api/couchpotato/txt_results/design/txtbrowser/view/txtbrowser')
 		.then(req => req.json())
 		.then(json => dispatch(txtRvRecv(json)));
-	};
-}
-
-export function recvWorkerStatus(json) {
-	return {
-		type: TXT_WORKER_STATUS_RECV,
-		workerStatusRv: json,
-		receivedAt: Date.now()
-	};
-}
-
-export function fetchWorkerStatus() {
-	return dispatch => {
-		return fetch('/api/txt/status')
-		.then(req => req.json())
-		.then(json => dispatch(recvWorkerStatus(json)));
 	};
 }
 
