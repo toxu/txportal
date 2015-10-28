@@ -231,6 +231,8 @@ export default class MachineJob extends Component{
                         type = "upgrade";
                     } else if (this.props.info.testSuiteName) {
                         type = "transcode";
+                    } else if (this.props.info.clean) {
+                        type = "clean";
                     }
                     let runContent = (
                     <Grid className="machineJobGroup">
@@ -268,6 +270,20 @@ export default class MachineJob extends Component{
                                                 <ProgressBar active bsStyle="default" label={progress} min={-(total * 30 / 100)} now={done} max={total} key={1}/>
                                                 <ProgressBar bsStyle="info" active now={transcoded - done} key={2}/>
                                             </ProgressBar>
+                                        </a>
+                                    </Col>
+                                </Row>
+                            </Grid>
+                        );
+                    } else if (type == "clean") {
+                        let jobTitle = 'Freeing up disk space';
+                        runContent = (
+                            <Grid className="machineJobGroup">
+                                <Row>
+                                    <Col md={8}>{jobTitle}</Col>
+                                    <Col md={4}>
+                                        <a href={`${this.props.workerUrl}/result/${timestamp}`} target="_blank">
+                                            <ProgressBar className="progressBar" active min={-20} now={100}/>
                                         </a>
                                     </Col>
                                 </Row>
