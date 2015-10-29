@@ -17,8 +17,8 @@ export default class Machine extends Component{
         );
     }
 
-    isConcernedJob(info) {
-        if(info.clean) {
+    isConcernedJob(info, state) {
+        if(info.clean && state !== "running") {
             return false;
         } else {
             return true;
@@ -158,7 +158,7 @@ export default class Machine extends Component{
                     {this.isInfoValid(this.props) ?
                         <ListGroup fill>
                             {this.props.status.status.waiting && this.props.status.status.waiting.map(job => {
-                                if (this.isConcernedJob(job)) {
+                                if (this.isConcernedJob(job, "waiting")) {
                                     return (
                                         <ListGroupItem key={job.ID}>
                                             <MachineJob key={job.ID} state="waiting" info={job}
@@ -171,7 +171,7 @@ export default class Machine extends Component{
                                 }
                             })}
                             {this.props.status.status.running && this.props.status.status.running.map(job => {
-                                if (this.isConcernedJob(job[1])) {
+                                if (this.isConcernedJob(job[1], "running")) {
                                     return (
                                         <ListGroupItem key={job[1].ID} bsStyle={this.decideRunningJobColor(job[1])}>
                                             <MachineJob key={job[1].ID} state="running" info={job[1]}
@@ -185,7 +185,7 @@ export default class Machine extends Component{
 
                             })}
                             {this.props.status.status.finished && this.props.status.status.finished.map((job, i) => {
-                                if (this.isConcernedJob(job[1]) && i < nFinishedToShow) {
+                                if (this.isConcernedJob(job[1], "finished") && i < nFinishedToShow) {
                                     return (
                                         <ListGroupItem key={job[1].ID} bsStyle={this.decideFinishedJobColor(job[1])}>
                                             <MachineJob key={job[1].ID} state="finished" info={job[1]}

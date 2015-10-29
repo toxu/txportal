@@ -50,6 +50,11 @@ var sampleMachineSettings = {
                         "ls / ",
                         "..."
                     ]
+                }],
+                ["208", {
+                    "timestamp": "20151008-010238",
+                    "ID": 39391,
+                    "clean": 100,
                 }]
             ],
             waiting: [
