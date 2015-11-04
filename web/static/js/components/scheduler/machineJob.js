@@ -44,11 +44,11 @@ export default class MachineJob extends Component{
                 if (state == "running") {
                     let duration = new Date() - startDate;
                     if (progress) {
-                        let [pass, done, total] = this.parseProgress(progress);
+                        let [done, transcoded, total] = this.parseProgress(progress);
                         let remaining = total - done;
                         let remainingTime = "\u221E";
                         if (done && total) {
-                            remainingTime = strFromDuration(remaining * duration * total / done);
+                            remainingTime = strFromDuration(remaining * duration / done);
                         }
                         properties.push(["Remaining time:", remainingTime]);
                     }
