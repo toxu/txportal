@@ -267,8 +267,8 @@ export default class MachineJob extends Component{
                                     <Col md={4} className="endItem">
                                         <a href={`${this.props.workerUrl}/result/${timestamp}`} target="_blank">
                                             <ProgressBar className="progressBar">
-                                                <ProgressBar active bsStyle="default" label={progress} min={-(total * 30 / 100)} now={done} max={total} key={1}/>
-                                                <ProgressBar bsStyle="info" active now={transcoded - done} key={2}/>
+                                                <ProgressBar active bsStyle="default" label={progress} min={-20} now={done * 101 / (total+1)} key={1}/>
+                                                <ProgressBar bsStyle="info" active now={(transcoded - done) * 101 / (total+1)} key={2}/>
                                             </ProgressBar>
                                         </a>
                                     </Col>
