@@ -107,6 +107,27 @@ class Scheduler extends Component{
         this.props.killJob(machineId, jobId);
     }
 
+    keyToMachine(key) {
+        return (
+            <Machine
+                key={key}
+                status={this.props.machines[key]}
+                machineId={key}
+                onLockMachine={this.onLockMachine.bind(this)}
+                showCreateJobModal={(machineId, show) => this.props.showCreateJobModal(machineId, show)}
+                onKillJob={this.onKillJob.bind(this)}
+                />
+        );
+    }
+
+    isMachineInCol(left) {
+        // Left 208, 210, 233, 234...
+        // Right vlab21, vlab29, 210Z, 234Z...
+        return key => {
+            return left != (key.endsWith('Z') || key.startsWith('vlab'));
+        };
+    }
+
     render() {
         try {
             return (
@@ -125,18 +146,16 @@ class Scheduler extends Component{
                     }
                     { Object.keys(this.props.machines).length !== 0 &&
                     <div className="machineBox">
-                        {Object.keys(this.props.machines).map(key => {
-                                return (
-                                    <Machine
-                                        key={key}
-                                        status={this.props.machines[key]}
-                                        machineId={key}
-                                        onLockMachine={this.onLockMachine.bind(this)}
-                                        showCreateJobModal={(machineId, show) => this.props.showCreateJobModal(machineId, show)}
-                                        onKillJob={this.onKillJob.bind(this)}
-                                        />);
-                            }
-                        )}
+                        <Grid>
+                            <Row>
+                                <Col md={6}>
+                                    {Object.keys(this.props.machines).filter(this.isMachineInCol(true)).map(this.keyToMachine.bind(this))}
+                                </Col>
+                                <Col md={6}>
+                                    {Object.keys(this.props.machines).filter(this.isMachineInCol(false)).map(this.keyToMachine.bind(this))}
+                                </Col>
+                            </Row>
+                        </Grid>
                         {/*<div className="topmostRefreshButton">
                             <Button onClick={this.props.fetchStatus}><Glyphicon glyph="repeat"/></Button>
                         </div>*/}
