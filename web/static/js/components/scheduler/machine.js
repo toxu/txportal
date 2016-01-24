@@ -49,6 +49,7 @@ export default class Machine extends Component{
     getUnlockMachinePopover(props) {
         return (
             <Popover className="myPopover" title="Unlock machine">
+                <p className="lockMessage">{props.status.lockMessage}</p>
                 <p>Are you sure you want to unlock this machine?</p>
                 <Button bsStyle="primary" onClick={() => props.onLockMachine(props.machineId, false, "")}>Yes</Button>
             </Popover>
