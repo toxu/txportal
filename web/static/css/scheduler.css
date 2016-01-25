@@ -5,9 +5,13 @@
 
 .scheduler .machineBox {
     height: 100%;
-    display: flex;
-    flex-direction: column;
-    flex-wrap: wrap;
+    /*display: flex;*/
+    /*flex-direction: column;*/
+    /*flex-wrap: wrap;*/
+}
+
+.scheduler .machineBox .container {
+    width: 100%;
 }
 
 .topmostRefreshButton {
@@ -22,7 +26,7 @@
 
 .machinePanel {
     min-width: 450px;
-    width: 48%;
+    width: 98%;
     display: inline-block;
     margin: 1%;
 }
@@ -103,9 +107,14 @@
 
 .invisibleLink:hover {
     color: inherit;
+    cursor: pointer;
 }
 
 .machineActionIcon {
     margin-left: 2px;
     font-size: 17px;
+}
+
+.lockMessage {
+    font-style: italic;
 }
