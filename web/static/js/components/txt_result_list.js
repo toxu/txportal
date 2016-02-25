@@ -261,16 +261,18 @@ function filterByRSTP(rows, build){
 }
 
 function filterByTag(rows, tag){
-	if(tag == "" || tag == undefined){
+    console.log(tag);
+	if(tag.length == 0 || tag == undefined){
 		return rows;
 	}
 	var filtered_rows = rows.filter(
 		row => {
 			var testSuit = row[5];
-			if(testSuit.indexOf(tag) != -1)
-				return true;
-			else
-				return false;
+            for(var t of tag){
+                if(testSuit.indexOf(t) != -1)
+                    return true;
+            }
+            return false;
 		}
 	);
 	return filtered_rows;

@@ -54,12 +54,6 @@ class TxtRv extends React.Component{
 		else{
 			var RSTPClass = "RSTPUnselected";
 		}
-		if(filterByTag != ''){
-			var tagClass= "tagSelected";
-		}
-		else{
-			var tagClass= "tagUnselected";
-		}
 
         var tileStatus = 'tile-status';
         var iconStatus = 'icon-status';
@@ -88,29 +82,59 @@ class TxtRv extends React.Component{
         if(tags.indexOf('TS') != -1){
             labels.push('TS');
         }
-        if(tags.indexOf('SDI') != -1){
+        else if(tags.indexOf('SDI') != -1){
             labels.push('SDI');
         }
-
-
+        else{
+            labels.push(tags);
+        }
+        if(tags.indexOf('[') != -1 && tags.indexOf(']') != -1){
+            var tags_string = tags.substring(tags.indexOf('[')+1, tags.indexOf(']'));
+            tags_string = tags_string.replace('/\s/g', '');
+            var tags_array = tags_string.split(',');
+            labels = labels.concat(tags_array);
+        }
+        var label_selected = {};
+        for(var label of labels){
+            if(filterByTag.indexOf(label) != -1){
+                label_selected[label] = 'tagSelected';
+            }
+            else{
+                label_selected[label] = 'tagUnselected';
+            }
+        }
 
         return (
            <div className="txt-result-item">
                 <div className={tileStatus}>
-                <span className={iconStatus} title="passed"/>
+                    <span className={iconStatus} title="passed"/>
                 </div>
                 <div className="tile-main">
-                <h2><span className="ACPBuild">ACP-{ACPBuild}</span> <span>{labels.map(label => {if(label == 'TS') var type='TS'; if(label=='SDI') var type='SDI'; return <span onClick={this.tagOnClick.bind(this)} className={"labels label label-primary "+type+" "+tagClass}>{label}</span>})}</span></h2>
-                <div className="tile-info">
-                <span className="Date">{Date}</span>   <span className={"Name "+nameClass} onClick={this.nameOnClick.bind(this)}>{Name}</span>  <span className={"RSTP "+RSTPClass} onClick={this.RSTPOnclick.bind(this)}>TXP-{RSTP}</span>
-                </div>
+                    <h2>
+                        <span className="ACPBuild">ACP-{ACPBuild}</span> 
+                        <span>{labels.map(label => 
+                                {
+                                    var type='LABEL';
+                                    return (
+                                        <span onClick={this.tagOnClick.bind(this)} className={"labels label label-primary "+type+" "+label_selected[label]}>
+                                            {label}
+                                        </span>
+                                    )
+                                })}
+                        </span>
+                    </h2>
+                    <div className="tile-info">
+                        <span className="Date">{Date}</span>
+                        <span className={"Name "+nameClass} onClick={this.nameOnClick.bind(this)}>{Name}</span>  
+                        <span className={"RSTP "+RSTPClass} onClick={this.RSTPOnclick.bind(this)}>TXP-{RSTP}</span>
+                    </div>
                 </div>
                 <div className="tile-additional">
-                <div>
-                <a target="_blank" href={"http://10.50.100.213:5984/_utils/result-viewer.html?" + TestName}><p>{PassRatio}</p>{ratioBar}</a>
+                    <div>
+                        <a target="_blank" href={"http://10.50.100.213:5984/_utils/result-viewer.html?" + TestName}><p>{PassRatio}</p>{ratioBar}</a>
+                    </div>
                 </div>
-                </div>
-            </div>
+        </div>
 
         );
     }
