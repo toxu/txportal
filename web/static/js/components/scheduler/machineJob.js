@@ -44,12 +44,13 @@ export default class MachineJob extends Component{
                 if (state == "running") {
                     let duration = new Date() - startDate;
                     if (progress) {
-                        let [done, transcoded, total] = this.parseProgress(progress);
+                        let [done, transcoded, total, desc] = this.parseProgress(progress);
                         let remaining = total - done;
                         let remainingTime = "\u221E";
                         if (done && total) {
                             remainingTime = strFromDuration(remaining * duration / done);
                         }
+                        properties.push(["Progress Description:", desc]);
                         properties.push(["Remaining time:", remainingTime]);
                     }
                     properties.push(["Duration:", strFromDuration(duration)]);
@@ -119,18 +120,20 @@ export default class MachineJob extends Component{
     }
 
     // [pass, done, total]
-    parseProgress(progress) {
+    parseProgress(progressArr) {
         try {
+            let progressDesc = progressArr[0];
+            let progress = progressArr[1];
             let [, done, transcoded, total] = /(\d+)\/(\d+)\/(\d+)/.exec(progress);
-            return [parseInt(done), parseInt(transcoded), parseInt(total)];
+            return [parseInt(done), parseInt(transcoded), parseInt(total), progressDesc];
         } catch (e) {
             //console.info("Error occurred: ", e.stack);
             try {
                 let [, done, total] = /(\d+)\/(\d+)/.exec(progress);
-                return [parseInt(done), parseInt(done), parseInt(total)];
+                return [parseInt(done), parseInt(done), parseInt(total), progressDesc];
             } catch (e) {
                 //console.info("Error occurred: ", e.stack);
-                return [0, 0, 0];
+                return [0, 0, 0, 'unknown'];
             }
         }
     }
@@ -258,7 +261,8 @@ export default class MachineJob extends Component{
                         );
                     } else if (type === "transcode") {
                         // run test
-                        let [done, transcoded, total] = this.parseProgress(progress);
+                        let [done, transcoded, total, _] = this.parseProgress(progress);
+                        console.info('done', done, 'transcoded', transcoded);
                         let jobTitle = (stopTime?'Stopping':'Running') + ` ${testSuiteName} test on build ${acpBuild}`;
                         runContent = (
                             <Grid className="machineJobGroup">
@@ -267,8 +271,8 @@ export default class MachineJob extends Component{
                                     <Col md={4} className="endItem">
                                         <a href={`${this.props.workerUrl}/result/${timestamp}`} target="_blank">
                                             <ProgressBar className="progressBar">
-                                                <ProgressBar active bsStyle="default" label={progress} min={-20} now={done * 101 / (total+1)} key={1}/>
-                                                <ProgressBar bsStyle="info" active now={(transcoded - done) * 101 / (total+1)} key={2}/>
+                                                <ProgressBar active bsStyle="default" label={`${done}/${total}`} min={-20} now={(done) * 100 / total} key={1}/>
+                                                <ProgressBar bsStyle="info" active now={(transcoded - done) * 100 / total} key={2}/>
                                             </ProgressBar>
                                         </a>
                                     </Col>
