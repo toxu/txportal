@@ -120,12 +120,14 @@ class Scheduler extends Component{
         );
     }
 
-    isMachineInCol(left) {
-        // Left 208, 210, 233, 234...
-        // Right vlab21, vlab29, 210Z, 234Z...
-        return key => {
-            return left != (key.endsWith('Z') || key.startsWith('vlab'));
-        };
+    machinesInCol(left, machines) {
+        let set = new Set(machines);
+        let arr = Array.from(set);
+        if (left) {
+            return arr.slice(0, set.size / 2);
+        } else {
+            return arr.slice(set.size / 2, set.size);
+        }
     }
 
     render() {
@@ -149,10 +151,10 @@ class Scheduler extends Component{
                         <Grid>
                             <Row>
                                 <Col md={6}>
-                                    {Object.keys(this.props.machines).filter(this.isMachineInCol(true)).map(this.keyToMachine.bind(this))}
+                                    {this.machinesInCol(true, Object.keys(this.props.machines)).map(this.keyToMachine.bind(this))}
                                 </Col>
                                 <Col md={6}>
-                                    {Object.keys(this.props.machines).filter(this.isMachineInCol(false)).map(this.keyToMachine.bind(this))}
+                                    {this.machinesInCol(false, Object.keys(this.props.machines)).map(this.keyToMachine.bind(this))}
                                 </Col>
                             </Row>
                         </Grid>
