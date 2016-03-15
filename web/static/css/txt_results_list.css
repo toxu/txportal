@@ -292,6 +292,11 @@
     font-size: 11px;
 }
 
+.txt-result-item .LABEL {
+    cursor: pointer;
+    font-size: 11px;
+}
+
 .nameSelected {
 	border-style: solid;
 	border-color: darkgrey;

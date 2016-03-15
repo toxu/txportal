@@ -60,7 +60,7 @@ function loadTxtRv(state = {
    	endDate: "",
    	filterByName: "",
    	filterByRSTP: "",
-   	filterByTag: "",
+   	filterByTag: [],
    	filterByRatio: ""
 }, action) {
 	switch(action.type) {
@@ -106,13 +106,13 @@ function loadTxtRv(state = {
 			filterByRSTP: rstp
 		});
 	case TXT_Filter_BY_TAG:
-		if(state.filterByTag == action.filterByTag)
-			var tag = "";
-		else
-			var tag = action.filterByTag;
-		return Object.assign({}, state,{
-			filterByTag: tag
-		});
+        var index = state.filterByTag.indexOf(action.filterByTag);
+		if(index != -1){
+            return Object.assign({}, state, {filterByTag: state.filterByTag.slice(0,index).concat(state.filterByTag.slice(index+1))});
+        }
+		else{
+            return Object.assign({}, state, {filterByTag: state.filterByTag.slice().concat(action.filterByTag)});
+        }
 	case TXT_Filter_BY_RATIO:
 		return Object.assign({}, state,{
 			filterByRatio: action.filterByRatio
