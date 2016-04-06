@@ -61,7 +61,8 @@ function loadTxtRv(state = {
    	filterByName: "",
    	filterByRSTP: "",
    	filterByTag: [],
-   	filterByRatio: ""
+   	filterByRatio: "",
+    updateInterval: 600000 
 }, action) {
 	switch(action.type) {
 	case TXT_RV_INVALIDATE:

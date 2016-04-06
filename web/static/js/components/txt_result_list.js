@@ -1,7 +1,7 @@
 import React from 'react';
 import {connect} from 'react-redux';
 import {fetchTxtRv, setFilter, setDateInfo, filterByRatio} from '../actions/txt_results';
-import {Button, Row, Col} from 'react-bootstrap';
+import {Button, Row, Col, ProgressBar} from 'react-bootstrap';
 
 import TxtRv from './txt_result';
 var DateRangePicker = require('react-bootstrap-daterangepicker');
@@ -25,7 +25,13 @@ class TxtResultList extends React.Component{
 	componentDidMount() {
         this.props.dispatch(fetchTxtRv());
         this.props.dispatch(setDateInfo(moment().subtract(29,'days').format('YYYY-MM-DD'), moment().format('YYYY-MM-DD')));
+        console.log(this.props.updateInterval);
+        this.timer = setInterval(() => this.props.dispatch(fetchTxtRv()), this.props.updateInterval);
 	}
+
+    componentWillUnmount() {
+        clearInterval(this.timer);
+    }
 
 	onKeyUp(event) {
         this.props.dispatch(setFilter(event.target.value));
@@ -40,7 +46,7 @@ class TxtResultList extends React.Component{
     }
 
 	render() {
-		const {dispatch, rows, startDate, endDate, filterByName, filterByRSTP, filterByTag, filterByRatio} = this.props;
+		const {dispatch, rows, startDate, endDate, filterByName, filterByRSTP, filterByTag, filterByRatio, isFetching} = this.props;
 		var ranges = {
 				'Today': [moment(), moment()],
 				'Yesterday': [moment().subtract(1, 'days'), moment().subtract(1, 'days')],
@@ -81,6 +87,12 @@ class TxtResultList extends React.Component{
 			</Col>
 		</Row>
 		<Row>
+            { this.props.isFetching && this.props.rows.length === 0 &&
+                <div>
+                    <p>Now fetching, please wait...</p>
+                    <ProgressBar active now={100}/>
+                </div>
+            }
 			<div className="TxtRVs">
 				{content}
 			</div>
@@ -352,6 +364,8 @@ function select(state) {
     var filterByRSTP = state.loadTxtRv.filterByRSTP;
     var filterByTag = state.loadTxtRv.filterByTag;
     var filterByRatio = state.loadTxtRv.filterByRatio;
+    var isFetching = state.loadTxtRv.isFetching;
+    var updateInterval = state.loadTxtRv.updateInterval;
     return{
     	rows: createRows(rows, filter, startDate, endDate, filterByName, filterByRSTP, filterByTag, filterByRatio),
     	startDate: startDate,
@@ -359,7 +373,9 @@ function select(state) {
     	filterByName: filterByName,
     	filterByRSTP: filterByRSTP,
     	filterByTag: filterByTag,
-    	filterByRatio: filterByRatio
+    	filterByRatio: filterByRatio,
+        isFetching: isFetching,
+        updateInterval: updateInterval
     };
 }
 
