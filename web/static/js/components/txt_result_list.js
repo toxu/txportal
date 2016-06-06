@@ -331,7 +331,8 @@ function createRows(result, filter, startDate, endDate, name, rstp, tag, ratio){
 				var testSuit = result.value[5];
 
 				var date = formatDate(TestName);
-				return [passed/total, TestName, ACPBuild, ACPIP, RSTPBuild, testSuit, passRatio, date];
+                var rev = result.value[7];
+				return [passed/total, TestName, ACPBuild, ACPIP, RSTPBuild, testSuit, passRatio, date, rev];
 			}
 		);
 		rows = filterByDate(rows, startDate, endDate);

@@ -1,16 +1,24 @@
 import React from 'react';
 import {connect} from 'react-redux';
-import {filterByName, filterByRSTP, filterByTag} from '../actions/txt_results';
+import {deleteDocument, filterByName, filterByRSTP, filterByTag} from '../actions/txt_results';
 import * as bs from 'react-bootstrap';
+import {Modal} from 'react-bootstrap';
 var $ = require("jquery");
 
 // CSS
 import '../../css/txt_results_list.css';
 import 'bootstrap/dist/css/bootstrap.min.css';
 
+var $ = require("jquery");
+
 class TxtRv extends React.Component{
+
     constructor(props) {
         super(props);
+        this.record_time = 0;
+        this.record_x = 0;
+        this.record_y = 0;
+        this.state = {showModal: false};
     }
 
     componentDidMount() {
@@ -28,6 +36,31 @@ class TxtRv extends React.Component{
         this.props.dispatch(filterByTag($(event.target).text()));
     }
 
+    mouseDown(event) {
+        this.record_x = event.pageX;
+        this.record_y = event.pageY;
+        this.record_time = Date.now()
+    }
+
+    mouseUp(event) {
+        if (Date.now() - this.record_time >= 500 && Math.abs(event.pageX - this.record_x) <= 10 && Math.abs(event.pageY - this.record_y) <= 10) {
+            this.open();
+        }
+    }
+
+    open() {
+        this.setState({showModal: true});
+    }
+
+    close() {
+        this.setState({showModal: false});
+    }
+
+    delete() {
+        this.close();
+        this.props.dispatch(deleteDocument(this.props.result[1], this.props.result[8]));
+        console.log("delete");
+    }
 
     render() {
         const {dispatch, result, filterByName, filterByRSTP, filterByTag} = this.props;
@@ -95,6 +128,12 @@ class TxtRv extends React.Component{
             tags_string = tags_string.replace('/\s/g', '');
             var tags_array = tags_string.split(',');
             labels = labels.concat(tags_array);
+        } else if(tags.indexOf('(') != -1 && tags.indexOf(')') != -1) {
+            labels.push(tags.substring(0, tags.indexOf('(')));
+            var tags_string = tags.substring(tags.indexOf('(')+1, tags.indexOf(')'));
+            tags_string = tags_string.replace('/\s/g', '');
+            var tags_array = tags_string.split(',');
+            labels = labels.concat(tags_array);
         } else {
             labels.push(tags);
         }
@@ -109,7 +148,7 @@ class TxtRv extends React.Component{
         }
 
         return (
-           <div className="txt-result-item">
+           <div className="txt-result-item" onMouseDown={this.mouseDown.bind(this)} onMouseUp={this.mouseUp.bind(this)}>
                 <div className={tileStatus}>
                     <span className={iconStatus} title="passed"/>
                 </div>
@@ -135,11 +174,24 @@ class TxtRv extends React.Component{
                 </div>
                 <div className="tile-additional">
                     <div>
-                        <a target="_blank" href={"http://10.50.100.213:5984/_utils/result-viewer.html?" + TestName}><p>{PassRatio}</p>{ratioBar}</a>
+                        <a target="_blank" href={"http://10.50.100.213:5984/_utils/result-viewer.html?" + TestName}>
+                            <p>{PassRatio}</p>
+                            {ratioBar}
+                        </a>
                     </div>
                 </div>
-        </div>
-
+                <div>
+                    <Modal show={this.state.showModal} onHide={this.close.bind(this)}>
+                      <Modal.Header closeButton>
+                        <Modal.Title>Delete</Modal.Title>
+                      </Modal.Header>
+                      <Modal.Body>Delete this record?</Modal.Body>
+                      <Modal.Footer>
+                        <bs.Button onClick={this.delete.bind(this)}>Delete</bs.Button>
+                      </Modal.Footer>
+                    </Modal>
+                </div>
+            </div>
         );
     }
 }

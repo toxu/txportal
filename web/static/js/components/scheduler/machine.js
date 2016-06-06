@@ -106,7 +106,7 @@ export default class Machine extends Component{
             <table className="propTable">
                 <tbody>
                 {this.makeProp("Worker", <a href={props.status.workerUrl} target="_blank">{props.status.worker}</a>)}
-                {this.makeProp("Streamer", <a href={"http://" + props.status.setting.streamer + ":1234"} target="_blank">{props.status.setting.streamer}</a>)}
+                {this.makeProp("Streamer", <a href={"http://" + props.status.setting.streamer + (props.status.setting.streamer.indexOf(":")==-1?":1234":"")} target="_blank">{props.status.setting.streamer}</a>)}
                 {this.makeProp("Supported Tests", props.status.setting.supported_test_types.join(", "))}
                 </tbody>
             </table>

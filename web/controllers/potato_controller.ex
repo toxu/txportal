@@ -39,4 +39,16 @@ defmodule Txportal.PotatoController do
            end
     text conn, rv_json
   end
+
+  def delete_document(conn, %{"db" => db, "document" => document, "rev" => rev}) do
+    HTTPoison.start
+    url = @db_url <> "/#{db}/#{document}?rev=#{rev}"
+    rv = HTTPoison.delete url
+
+    rv_json = case rv do
+             {:ok, resp} -> resp.body
+             _ -> %{"Error" => "Failed to connect to database"}
+           end
+    text conn, rv_json
+  end
 end

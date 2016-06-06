@@ -26,6 +26,8 @@ defmodule Txportal.Router do
     get "/couchpotato/:db/design/:design/view/:view", PotatoController, :view_results
     get "/couchpotato/:db/design/:design/view/:view/key/:key", PotatoController, :key_results
     get "/couchpotato/:db/design/:design/view/:view/startkey/:startkey/endkey/:endkey", PotatoController, :key_range_results
+    
+    get "/couchpotato/:db/:document/:rev", PotatoController, :delete_document
   end
 
   scope "/", Txportal do

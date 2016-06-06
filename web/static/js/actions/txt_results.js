@@ -50,6 +50,17 @@ export function fetchTxtRv() {
 	};
 }
 
+export function deleteDocument(document_id, document_rev) {
+    console.log("delete docuemnt 1");
+    console.log(document_id);
+    console.log(document_rev);
+    return dispatch => {
+        console.log("delete document 2");
+        return fetch('/api/couchpotato/txt_results/'+ document_id+ "/" + document_rev)
+        .then(req => dispatch(fetchTxtRv()));
+    };
+}
+
 export function setFilter(filter) {
 	return {
 		type: TXT_SET_FILTER,
