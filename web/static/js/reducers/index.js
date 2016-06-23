@@ -22,6 +22,7 @@ import {
 } from '../constants/action_types';
 
 import scheduler from './scheduler.js';
+import tags from './tags.js';
 
 function selectTxtRv(state = '', action) {
 	switch(action.type) {
@@ -173,7 +174,8 @@ const rootReducer = combineReducers({
     selectTxtRv,
     butter,
 	txtWorker,
-	scheduler
+	scheduler,
+    tags
 });
 
 export default rootReducer;

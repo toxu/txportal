@@ -2,7 +2,8 @@ import {
     SCHEDULER_FETCH,
     SCHEDULER_UPDATESTATUS,
     SCHEDULER_CONNECTIONLOST,
-    SCHEDULER_SHOW_CREATE_JOB_MODAL
+    SCHEDULER_SHOW_CREATE_JOB_MODAL,
+    SCHEDULER_UPDATETAGS
 } from '../constants/action_types';
 import fetch from 'isomorphic-fetch';
 
@@ -37,6 +38,13 @@ export function fetchStatus() {
         .then(json => dispatch(updateMachineStatus(json)))
         .catch(result => dispatch(lostConnection(result)));
     };
+}
+
+export function restartScheduler() {
+    return dispatch => {
+        fetch(schedulerUrl + "/restart_request", {method: "POST", body: ""})
+        .then(response => dispatch(fetchStatus));
+    }
 }
 
 export function lockMachine(machineId, lock, lockMessage) {
